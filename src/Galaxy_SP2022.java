@@ -14,7 +14,7 @@ public class Galaxy_SP2022 {
 	public static void main(String[] args) {
 		String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\collision.csv";
 		CSVLoader csvLoader = new CSVLoader(fileName);
-		//space
+		//spaces
 		Space space = csvLoader.parseDataToSpace();
 		JFrame window = new JFrame();
 		window.setTitle("Semestralni prace UPG 2022 - Vesmir");

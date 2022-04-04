@@ -106,7 +106,7 @@ public class DrawingPanel extends JPanel {
         Double weight = spaceObj.getWeight();
         // 1 = m/V (V je objem koule)
         //V = 4*pi*r*r*r = m
-        //.cbrt()
+        //.cbrt()s
         Double r = Math.cbrt(3*weight/4*Math.PI);
         //System.out.println(spaceObj.getName() + " polomer: " + r);
         return r;

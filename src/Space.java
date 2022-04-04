@@ -50,6 +50,7 @@ public class Space {
 
     /**
      * Aktualizuje pozici prvku SpaceObj v spaceObjs pomoci simulace N-objektu
+     * s
      */
     public void updateSystem(){
         //ubehnuta doba
