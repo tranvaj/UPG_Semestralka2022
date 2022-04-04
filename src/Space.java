@@ -6,10 +6,16 @@ public class Space {
     private double gravConst;
     private double stepTime;
 
+    private long simStartTime;
+    private double simulationTime;
+    private double timeSinceLastUpdateAbsolute;
+
     public Space(List<SpaceObj> spaceObjs, double G, double t){
         this.spaceObjs = spaceObjs;
         this.gravConst = G;
         this.stepTime = t;
+        this.timeSinceLastUpdateAbsolute = 0;
+        this.simStartTime = 0;
     }
 
     public List<SpaceObj> getSpaceObjs() {
@@ -24,21 +30,39 @@ public class Space {
         return stepTime;
     }
 
-    private double timeElapsedSinceUpdate = 0;
+    public void setSimStartTime(long simStartTime) {
+        this.simStartTime = simStartTime;
+    }
+
+    public double relativeTimeSinceLastUpdate() {
+        System.out.println("curent: " + getSimulationTime() + "\nsincelastupdate: " + timeSinceLastUpdateAbsolute);
+        return ((getSimulationTime()  -  timeSinceLastUpdateAbsolute));
+    }
+
+    public double getSimulationTime() {
+        simulationTime = (getCurrentTime()/1000.0)*stepTime;
+        return simulationTime;
+    }
+
+    public long getCurrentTime(){
+        return System.currentTimeMillis()-simStartTime;
+    }
 
     /**
      * Aktualizuje pozici prvku SpaceObj v spaceObjs pomoci simulace N-objektu
-     * @param time cas od doby spusteni simulace
      */
-    public void updateSystem(Double time){
+    public void updateSystem(){
         //ubehnuta doba
-        timeElapsedSinceUpdate = time - timeElapsedSinceUpdate;
-        double t = timeElapsedSinceUpdate;
+        //timeElapsedSinceUpdate = time - timeElapsedSinceUpdate;
+        double t = relativeTimeSinceLastUpdate();
+        //System.out.println("time" + t);
+        //ubehnuta doba
         //Ziskame zmenu v case, pokud ubehnuta doba je vetsi nez dt_min, tak zmena v case je dt_min
-        double dt_min = stepTime/100;
+        double dt_min = stepTime/3000;
 
         while(t > 0){
             double dt = Math.min(t, dt_min);
+
             //Vypocitame zrychleni vsech spaceObj a ulozime do kolekce
             List<Coord2D> accelerationList = new ArrayList<>();
             for(int i = 0; i < spaceObjs.size(); i++){
@@ -59,13 +83,13 @@ public class Space {
 
                 double xd = accelerationList.get(i).getX();
                 double yd = accelerationList.get(i).getY();
-                System.out.println(Math.sqrt(xd*xd + yd*yd));
+                //System.out.println(Math.sqrt(xd*xd + yd*yd));
             }
 
             t = t-dt;
             //System.out.println("working... - " + t);
         }
-
+        timeSinceLastUpdateAbsolute = getSimulationTime();
     }
 
     private Coord2D getAcceleration(int index){
@@ -78,7 +102,7 @@ public class Space {
             double dx =  obj_j.getPos().getX() - obj_i.getPos().getX();
             double dy =  obj_j.getPos().getY() - obj_i.getPos().getY();
             double dist = Math.sqrt(dx*dx + dy*dy);
-            a_i_x += obj_j.getWeight() * dx/Math.pow(dist,3);
+            a_i_x += obj_j.getWeight() * (dx/Math.pow(dist,3));
             a_i_y += obj_j.getWeight() * dy/Math.pow(dist,3);
 
 

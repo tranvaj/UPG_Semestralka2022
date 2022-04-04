@@ -13,6 +13,8 @@ public class SpaceObj {
     private Coord2D vel;
     //obj weight
     private double weight;
+    //size of obj
+    //private double size;
 
     public SpaceObj(String name, String type, Coord2D pos, Coord2D vel, double weight){
         this.name = name;
@@ -20,6 +22,14 @@ public class SpaceObj {
         this.pos = pos;
         this.vel = vel;
         this.weight = weight;
+    }
+
+    //velikost ctverce ktery reprezentuje nas objekt
+    //velikost je vypocitana za predpokladu, ze vsechny objekty maji jednotkovou hustotu
+    public double getSize(){
+        Double r = Math.cbrt(3*weight/4*Math.PI);
+        //melo by
+        return r;
     }
 
     public void setPos(Coord2D pos) {

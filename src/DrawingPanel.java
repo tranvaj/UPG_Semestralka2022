@@ -5,17 +5,17 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 public class DrawingPanel extends JPanel {
-    private double startTime;
     private Coord2D minObj;
     private Coord2D maxObj;
     private double simulatedTime;
     private Space space;
+    //scaleA reprezentuje
     private double scaleA = 1;
 
     public DrawingPanel(Space space){
         this.space = space;
-        this.startTime = System.nanoTime();
-        simulatedTime = ((System.nanoTime()-startTime)/1000000000.0)*space.getStepTime();
+        //this.startTime = System.nanoTime();
+        //simulatedTime = ((System.nanoTime()-startTime)/1000000000.0)*space.getStepTime();
         this.setPreferredSize(new Dimension(800, 600));
     }
 
@@ -55,13 +55,14 @@ public class DrawingPanel extends JPanel {
         g2.setColor(Color.BLUE);
         //g2.draw(rect);
 
-        space.updateSystem(simulatedTime);
+        //space.updateSystem(simulatedTime);
 
         g2.setTransform(old);
     }
 
     public void drawTime(Graphics2D g2){
-        simulatedTime = ((System.nanoTime()-startTime)/1000000000.0)*space.getStepTime();
+        //((System.nanoTime()-startTime)/1000000000.0)*space.getStepTime();
+        simulatedTime = space.getSimulationTime();
         String str = "Current time: " + (simulatedTime) + "s";
         Font font = new Font("Arial",Font.BOLD, 14);
         g2.setFont(font);
@@ -86,8 +87,7 @@ public class DrawingPanel extends JPanel {
         double y_def = space.getSpaceObjs().get(0).getPos().getY();
         minX = x_def; minY = y_def; maxX =  x_def; maxY = y_def;
         for(SpaceObj a : space.getSpaceObjs()){
-            double r = calculateR(a);
-            double size = r*2* scaleA;
+            double size = a.getSize() * scaleA;
             double x1 = a.getPos().getX() - size/2;
             double y1 = a.getPos().getY() - size/2;
             double x2 = a.getPos().getX() + size/2;
@@ -102,7 +102,7 @@ public class DrawingPanel extends JPanel {
         maxObj = new Coord2D(maxX,maxY);
     }
 
-    public double calculateR(SpaceObj spaceObj){
+    public double calculateRS(SpaceObj spaceObj){
         Double weight = spaceObj.getWeight();
         // 1 = m/V (V je objem koule)
         //V = 4*pi*r*r*r = m
@@ -116,10 +116,10 @@ public class DrawingPanel extends JPanel {
         g2.setColor(Color.RED);
         space.getSpaceObjs().forEach(spaceObj -> {
             if(spaceObj.getType().equals("Planet")){
-                Double r = calculateR(spaceObj);
+                //Double r = calculateR(spaceObj);
                 Double xPos = spaceObj.getPos().getX();
                 Double yPos = spaceObj.getPos().getY();
-                double size = r*2* scaleA;
+                double size = spaceObj.getSize()*scaleA;
                 //-minObj.get(x) abychom posunuli objekt na kladne souradnice -> aby fungoval scale normalne
                 g2.fill(new Ellipse2D.Double(-minObj.getX()+xPos-(size/2),-minObj.getY()+yPos-(size/2),size,size));
             }
