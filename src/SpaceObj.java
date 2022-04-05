@@ -62,7 +62,7 @@ public class SpaceObj {
 
     @Override
     public String toString() {
-        return "Planet{" +
+        return "SpaceObj{" +
                 "name='" + name + '\'' +
                 ", pos=" + pos +
                 ", vel=" + vel +
