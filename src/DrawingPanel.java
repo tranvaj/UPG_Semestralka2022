@@ -23,7 +23,7 @@ public class DrawingPanel extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2 = (Graphics2D)g;
-        drawTime(g2);
+
 
         /*
         DRAWING OBJECTS IN SPACE
@@ -58,6 +58,10 @@ public class DrawingPanel extends JPanel {
         //space.updateSystem(simulatedTime);
 
         g2.setTransform(old);
+
+        //draw time
+        g2.setColor(Color.BLACK);
+        drawTime(g2);
     }
 
     public void drawTime(Graphics2D g2){
@@ -102,15 +106,6 @@ public class DrawingPanel extends JPanel {
         maxObj = new Coord2D(maxX,maxY);
     }
 
-    public double calculateRS(SpaceObj spaceObj){
-        Double weight = spaceObj.getWeight();
-        // 1 = m/V (V je objem koule)
-        //V = 4*pi*r*r*r = m
-        //.cbrt()s
-        Double r = Math.cbrt(3*weight/4*Math.PI);
-        //System.out.println(spaceObj.getName() + " polomer: " + r);
-        return r;
-    }
 
     public void drawPlanets(Graphics2D g2){
         g2.setColor(Color.RED);

@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 public class Galaxy_SP2022 {
 
 	public static void main(String[] args) {
-		String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\collision.csv";
+		String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\solar.csv";
 		CSVLoader csvLoader = new CSVLoader(fileName);
 		//spaces
 		Space space = csvLoader.parseDataToSpace();
@@ -26,6 +26,23 @@ public class Galaxy_SP2022 {
 		DrawingPanel panel = new DrawingPanel(space);
 		window.add(panel, BorderLayout.CENTER);
 
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.addKeyEventDispatcher(new KeyEventDispatcher() {
+					@Override
+					public boolean dispatchKeyEvent(KeyEvent e) {
+						if(e.getID() == KeyEvent.KEY_PRESSED
+								&& e.getKeyCode() == KeyEvent.VK_SPACE){
+							if(!space.isSimPaused()) {
+								space.startPause();
+							} else{
+								space.stopPause();
+							}
+
+						}
+						return false;
+					}
+				});
+
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
@@ -33,9 +50,9 @@ public class Galaxy_SP2022 {
 
 			@Override
 			public void run() {
-				long currentTime = System.currentTimeMillis() - startTime;
+				//long currentTime = System.currentTimeMillis() - startTime;
 				//timeElapsedSinceUpdate = currentTime - timeElapsedSinceUpdate;
-				space.updateSystem();
+				if(!space.isSimPaused()) space.updateSystem();
 				panel.repaint();
 			}
 		},0,20);
@@ -46,4 +63,6 @@ public class Galaxy_SP2022 {
 		window.setLocationRelativeTo(null); //vycentrovat na obrazovce
 		window.setVisible(true);
 	}
+
+
 }

@@ -28,7 +28,7 @@ public class SpaceObj {
     //velikost je vypocitana za predpokladu, ze vsechny objekty maji jednotkovou hustotu
     public double getSize(){
         Double r = Math.cbrt(3*weight/4*Math.PI);
-        //melo bys
+        //melo by byt r*2 ale s r to vypada jako podle zadani
         return r;
     }
 

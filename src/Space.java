@@ -10,6 +10,11 @@ public class Space {
     private double simulationTime;
     private double timeSinceLastUpdateAbsolute;
 
+    private boolean simPaused = false;
+    private long pauseStart = 0;
+    private long pausedTime = 0;
+    private long pausedTimeTotal = 0;
+
     public Space(List<SpaceObj> spaceObjs, double G, double t){
         this.spaceObjs = spaceObjs;
         this.gravConst = G;
@@ -34,18 +39,45 @@ public class Space {
         this.simStartTime = simStartTime;
     }
 
-    public double relativeTimeSinceLastUpdate() {
-        System.out.println("curent: " + getSimulationTime() + "\nsincelastupdate: " + timeSinceLastUpdateAbsolute);
+    private double relativeTimeSinceLastUpdate() {
+        //System.out.println("curent: " + getSimulationTime() + "\nsincelastupdate: " + timeSinceLastUpdateAbsolute);
         return ((getSimulationTime()  -  timeSinceLastUpdateAbsolute));
     }
 
     public double getSimulationTime() {
         simulationTime = (getCurrentTime()/1000.0)*stepTime;
+        System.out.println(pausedTimeTotal);
         return simulationTime;
     }
 
-    public long getCurrentTime(){
-        return System.currentTimeMillis()-simStartTime;
+    private long getCurrentTime(){
+        if(simPaused) {
+            updatePauseTime();
+            //System.out.println("AYOs" + pausedTime);
+        }
+        return (System.currentTimeMillis() - simStartTime) - pausedTime;
+    }
+
+    public void startPause() {
+        this.simPaused = true;
+        this.pauseStart = System.currentTimeMillis();
+        updatePauseTime();
+    }
+
+    private void updatePauseTime() {
+        pausedTime = (System.currentTimeMillis() - pauseStart) + pausedTimeTotal;
+        //setSimStartTime(simStartTime + pausedTime);
+    }
+
+    public void stopPause(){
+        this.simPaused = false;
+        //pausedTimeTotal keeps total pause time by summing the pausedTime with previous pausedTime
+        pausedTimeTotal = pausedTime;
+        //this.pauseStart = System.currentTimeMillis();
+    }
+
+    public boolean isSimPaused() {
+        return simPaused;
     }
 
     /**
@@ -111,5 +143,4 @@ public class Space {
         //System.out.println(gravConst * a_i_x + " " + gravConst * a_i_y);
         return new Coord2D( gravConst * a_i_x , gravConst * a_i_y );
     }
-
 }
