@@ -46,7 +46,7 @@ public class Space {
 
     public double getSimulationTime() {
         simulationTime = (getCurrentTime()/1000.0)*stepTime;
-        System.out.println(pausedTimeTotal);
+        //System.out.println(pausedTimeTotal);
         return simulationTime;
     }
 
@@ -114,8 +114,8 @@ public class Space {
                 spaceObj.setVel(new Coord2D(speedX,speedY));
                 spaceObj.setPos(new Coord2D(posX,posY));
 
-                double xd = accelerationList.get(i).getX();
-                double yd = accelerationList.get(i).getY();
+                //double xd = accelerationList.get(i).getX();
+                //double yd = accelerationList.get(i).getY();
                 //System.out.println(Math.sqrt(xd*xd + yd*yd));
             }
 
@@ -137,8 +137,6 @@ public class Space {
             double dist = Math.sqrt(dx*dx + dy*dy);
             a_i_x += obj_j.getWeight() * (dx/Math.pow(dist,3));
             a_i_y += obj_j.getWeight() * dy/Math.pow(dist,3);
-
-
         }
         //System.out.println(gravConst * a_i_x + " " + gravConst * a_i_y);
         return new Coord2D( gravConst * a_i_x , gravConst * a_i_y );

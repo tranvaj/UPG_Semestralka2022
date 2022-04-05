@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class DrawingPanel extends JPanel {
     private Coord2D minObj;
@@ -12,7 +12,12 @@ public class DrawingPanel extends JPanel {
     private Space space;
     //scaleA reprezentuje
     private double scaleA = 1;
+    //min velikost objektu
     private double minSize = 5;
+    //min
+    java.util.List<Shape> spaceObjShapeList;
+    SpaceObj selectedObj;
+
 
     public DrawingPanel(Space space){
         this.space = space;
@@ -21,6 +26,9 @@ public class DrawingPanel extends JPanel {
         this.setPreferredSize(new Dimension(800, 600));
     }
 
+    private double scaleTest = 0;
+    private double offsetXtest = 0;
+    private double offsetYtest = 0;
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -33,11 +41,14 @@ public class DrawingPanel extends JPanel {
         AffineTransform old = g2.getTransform();
 
         double scale = getScale();
+        scaleTest = scale;
         double spaceWidth = Math.abs(maxObj.getX() - minObj.getX());
         double spaceHeight = Math.abs(maxObj.getY() - minObj.getY());
 
         double offsetX = (this.getWidth() - spaceWidth*scale) / 2;
         double offsetY = (this.getHeight() - spaceHeight*scale) / 2;
+        offsetXtest = offsetX;
+        offsetYtest = offsetY;
 
         //System.out.println(offsetX+","+offsetY);
 
@@ -115,6 +126,7 @@ public class DrawingPanel extends JPanel {
 
     public void drawPlanets(Graphics2D g2){
         g2.setColor(Color.RED);
+        spaceObjShapeList = new ArrayList<>();
         space.getSpaceObjs().forEach(spaceObj -> {
             if(spaceObj.getType().equals("Planet")){
                 //Double r = calculateR(spaceObj);
@@ -127,9 +139,39 @@ public class DrawingPanel extends JPanel {
                     double minScale = minSize/temp;
                     size = size * minScale;
                 }
-                g2.fill(new Ellipse2D.Double(-minObj.getX()+xPos-(size/2),-minObj.getY()+yPos-(size/2),size,size));
+                Ellipse2D el = new Ellipse2D.Double(-minObj.getX()+xPos-(size/2),-minObj.getY()+yPos-(size/2),size,size);
+                spaceObjShapeList.add(el);
+                if(selectedObj != null){
+                   if(spaceObj.equals(selectedObj)){
+                        g2.setColor(Color.YELLOW);
+                   }
+                }
+                g2.fill(el);
+                g2.setColor(Color.RED);
             }
         });
 
+    }
+
+    public void getSelected(Coord2D mouseCoord) {
+
+        spaceObjShapeList.forEach(shape -> {
+            double scale = scaleTest;
+            double spaceWidth = Math.abs(maxObj.getX() - minObj.getX());
+            double spaceHeight = Math.abs(maxObj.getY() - minObj.getY());
+
+            double offsetX = (this.getWidth() - spaceWidth*scale) / 2;
+            double offsetY = (this.getHeight() - spaceHeight*scale) / 2;
+            double mouseX = ((mouseCoord.getX()/scale) - offsetX/scale);
+            double mouseY = ((mouseCoord.getY()/scale) - offsetY/scale);
+            if(shape.contains(mouseX ,mouseY)){
+                System.out.println("HRLLOsadaa\n\nadsad");
+                if(selectedObj != null && selectedObj.equals(space.getSpaceObjs().get(spaceObjShapeList.indexOf(shape)))){
+                    selectedObj = null;
+                } else{
+                    selectedObj = space.getSpaceObjs().get(spaceObjShapeList.indexOf(shape));
+                }
+            }
+        });
     }
 }

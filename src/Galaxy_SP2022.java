@@ -1,18 +1,14 @@
-import java.io.FileNotFoundException;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class Galaxy_SP2022 {
 
 	public static void main(String[] args) {
-		String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\solar.csv";
+		String fileName = "C:\\Users\\Uzivatel\\Desktop\\Skola\\KIV-UPG\\UPG_Semestralka2022\\data\\solar.csv";
 		CSVLoader csvLoader = new CSVLoader(fileName);
 		//spaces
 		Space space = csvLoader.parseDataToSpace();
@@ -21,10 +17,41 @@ public class Galaxy_SP2022 {
 		window.setMinimumSize(new Dimension(800,600));
 		window.setSize(800, 600);
 		long startTime = System.currentTimeMillis();
-
+		JPanel jPanel = new JPanel();
+		jPanel.add(new TextArea());
 		space.setSimStartTime(startTime);
 		DrawingPanel panel = new DrawingPanel(space);
+
 		window.add(panel, BorderLayout.CENTER);
+		//window.add(panel, BorderLayout.TOP);
+
+
+		panel.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panel.getSelected(new Coord2D(e.getX(),e.getY()));
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+
+			}
+		});
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.addKeyEventDispatcher(new KeyEventDispatcher() {
