@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.text.DecimalFormat;
 
 public class DrawingPanel extends JPanel {
     private Coord2D minObj;
@@ -11,6 +12,7 @@ public class DrawingPanel extends JPanel {
     private Space space;
     //scaleA reprezentuje
     private double scaleA = 1;
+    private double minSize = 5;
 
     public DrawingPanel(Space space){
         this.space = space;
@@ -67,7 +69,11 @@ public class DrawingPanel extends JPanel {
     public void drawTime(Graphics2D g2){
         //((System.nanoTime()-startTime)/1000000000.0)*space.getStepTime();
         simulatedTime = space.getSimulationTime();
-        String str = "Current time: " + (simulatedTime) + "s";
+        //Double roundedSimTime = Math.ro
+        //DecimalFormat df = new DecimalFormat("#.#");
+        //String str = "Current time: " + (df.format(simulatedTime)) + "s";
+        String str = "Current time: " + simulatedTime + "s";
+        //str = String.format("Current time: %f s", df.format(simulatedTime));
         Font font = new Font("Arial",Font.BOLD, 14);
         g2.setFont(font);
         g2.drawString(str,this.getWidth() - g2.getFontMetrics().stringWidth(str),g2.getFontMetrics().getHeight());
@@ -116,6 +122,11 @@ public class DrawingPanel extends JPanel {
                 Double yPos = spaceObj.getPos().getY();
                 double size = spaceObj.getSize()*scaleA;
                 //-minObj.get(x) abychom posunuli objekt na kladne souradnice -> aby fungoval scale normalne
+                if(size*getScale() < minSize){
+                    double temp = size*getScale();
+                    double minScale = minSize/temp;
+                    size = size * minScale;
+                }
                 g2.fill(new Ellipse2D.Double(-minObj.getX()+xPos-(size/2),-minObj.getY()+yPos-(size/2),size,size));
             }
         });

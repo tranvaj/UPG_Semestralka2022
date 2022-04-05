@@ -91,7 +91,7 @@ public class Space {
         //System.out.println("time" + t);
         //ubehnuta doba
         //Ziskame zmenu v case, pokud ubehnuta doba je vetsi nez dt_min, tak zmena v case je dt_min
-        double dt_min = stepTime/3000;
+        double dt_min = stepTime/2000;
 
         while(t > 0){
             double dt = Math.min(t, dt_min);
