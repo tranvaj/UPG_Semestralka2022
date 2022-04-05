@@ -89,7 +89,6 @@ public class Space {
         //timeElapsedSinceUpdate = time - timeElapsedSinceUpdate;
         double t = relativeTimeSinceLastUpdate();
         //System.out.println("time" + t);
-        //ubehnuta doba
         //Ziskame zmenu v case, pokud ubehnuta doba je vetsi nez dt_min, tak zmena v case je dt_min
         double dt_min = stepTime/2000;
 

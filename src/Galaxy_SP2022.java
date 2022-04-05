@@ -8,22 +8,32 @@ import javax.swing.*;
 public class Galaxy_SP2022 {
 
 	public static void main(String[] args) {
-		String fileName = "C:\\Users\\Uzivatel\\Desktop\\Skola\\KIV-UPG\\UPG_Semestralka2022\\data\\solar.csv";
+		String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\solar.csv";
 		CSVLoader csvLoader = new CSVLoader(fileName);
-		//spaces
+		//Load data
 		Space space = csvLoader.parseDataToSpace();
+		if(space == null) {
+			System.out.println("Could not load data from file, exiting program.");
+			return;
+		}
 		JFrame window = new JFrame();
 		window.setTitle("Semestralni prace UPG 2022 - Vesmir");
 		window.setMinimumSize(new Dimension(800,600));
 		window.setSize(800, 600);
+		//top menu
+		//JPanel toolBar = new JPanel();
+		//Label label = new Label("Hellodddddddddddd");
+		//label.setMinimumSize(new Dimension(500,500));
+		//toolBar.add(label,BorderLayout.CENTER);
+		//toolBar.setSize(new Dimension(500,500));
+
+
 		long startTime = System.currentTimeMillis();
-		JPanel jPanel = new JPanel();
-		jPanel.add(new TextArea());
 		space.setSimStartTime(startTime);
 		DrawingPanel panel = new DrawingPanel(space);
 
 		window.add(panel, BorderLayout.CENTER);
-		//window.add(panel, BorderLayout.TOP);
+		//window.add(toolBar, BorderLayout.NORTH);
 
 
 		panel.addMouseListener(new MouseListener() {
@@ -72,13 +82,8 @@ public class Galaxy_SP2022 {
 
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
-
-			long timeElapsedSinceUpdate = 0;
-
 			@Override
 			public void run() {
-				//long currentTime = System.currentTimeMillis() - startTime;
-				//timeElapsedSinceUpdate = currentTime - timeElapsedSinceUpdate;
 				if(!space.isSimPaused()) space.updateSystem();
 				panel.repaint();
 			}
