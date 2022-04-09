@@ -123,7 +123,8 @@ public class DrawingPanel extends JPanel {
         simulatedTime = simulatedTime / 10000;
 
         //drawing the simulated time
-        String str = "Simulated time: " + simulatedTime + "s";
+        //String str = "Simulated time: " + simulatedTime + "s";
+        String str = String.format("Simulated time: %.3f s", simulatedTime);
         Font font = new Font("Arial",Font.BOLD, 14);
         g2.setFont(font);
         g2.drawString(str,this.getWidth() - g2.getFontMetrics().stringWidth(str),g2.getFontMetrics().getHeight());
@@ -145,8 +146,9 @@ public class DrawingPanel extends JPanel {
 
     /**
      * This method will calculate the upper-left and bottom-right coordinates of the
-     * rectangle that bounds all of our spaceObjs.
-     * These coordinates are saved in class attributes minObj and maxObj
+     * rectangle that minimally bounds all of our space objects.
+     * This method takes the size of each individual space objects into account when calculating the bounds.
+     * These coordinates are saved in class attributes minObj and maxObj.
      */
     public void getMinMaxBounds(){
         double minX,minY,maxX,maxY;

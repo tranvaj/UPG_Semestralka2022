@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents a Space that contains list of space objects, a gravitational constant and custom time.
+ * This class represents a Space that contains list of space objects, a gravitational constant and simulation time.
  */
 public class Space {
     private List<SpaceObj> spaceObjs;
