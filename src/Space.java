@@ -44,10 +44,16 @@ public class Space {
         return spaceObjs;
     }
 
+    /**
+     * @return Gravitational constant of this instance
+     */
     public double getGravConst() {
         return gravConst;
     }
 
+    /**
+     * @return The time step of this instance
+     */
     public double getStepTime() {
         return stepTime;
     }
