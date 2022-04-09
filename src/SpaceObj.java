@@ -3,19 +3,39 @@
  * A space object has a name; type; X,Y pos; X,Y velocity and weight
  */
 public class SpaceObj {
-    //obj name
+    /**
+     * Name of the space object represented by instance of String
+     */
     private String name;
-    //obj type
+    /**
+     * Type of the space object represented by instance of String
+     */
     private String type;
-    //X,Y coord of obj position
+    /**
+     * X,Y coord of space object position
+     */
     private Coord2D pos;
-    //X,Y coord of obj velocity
+    /**
+     * X,Y coord of space object velocity
+     */
     private Coord2D vel;
-    //obj weight
+    /**
+     * Space object weight
+     */
     private double weight;
-    //size of obj
+    /**
+     * Size of space object
+     */
     private double size;
 
+    /**
+     * Constructor of SpaceObj
+     * @param name Name
+     * @param type Type
+     * @param pos Position represented by instance of Coord2D
+     * @param vel Velocity represented by instance of Coord2D
+     * @param weight Weight of the space object
+     */
     public SpaceObj(String name, String type, Coord2D pos, Coord2D vel, double weight){
         this.name = name;
         this.type = type;
@@ -25,22 +45,21 @@ public class SpaceObj {
         this.size = getRadius() * 2;
     }
 
-    //velikost ctverce ktery reprezentuje nas objekt
-    //velikost je vypocitana za predpokladu, ze vsechny objekty maji jednotkovou hustotu
+    /**
+     * Gets the radius of the spaceObj assuming density is equal to 1 and volume is represented by a sphere.
+     * @return Radius of this instance
+     */
+    public double getRadius(){
+        Double r = Math.cbrt(3*weight/4*Math.PI);
+        return r;
+    }
+
     public double getSize(){
-        //vzorec odvozed z jednotkove hustoty, hmotnosti objektu a objem koule
-        //Double r = Math.cbrt(3*weight/4*Math.PI);
-        //Double r2  = Math.sqrt(weight/Math.PI);
         return size;
     }
 
     public void setSize(double size) {
         this.size = size;
-    }
-
-    public double getRadius(){
-        Double r = Math.cbrt(3*weight/4*Math.PI);
-        return r;
     }
 
     public void setPos(Coord2D pos) {

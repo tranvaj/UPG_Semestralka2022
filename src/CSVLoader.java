@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * An instance of this class loads and parses a CSV file
  * The instance will provide a method with which you can
- * transform the data into an object space;
+ * transform data into an instance of space;
  * @author Vaclav Tran
  *
  */

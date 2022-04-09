@@ -8,16 +8,16 @@ import javax.swing.*;
 public class Galaxy_SP2022 {
 
 	public static void main(String[] args) {
-		//String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\solar.csv";
+		//String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\solar.csv"; #DEBUG
 		CSVLoader csvLoader;
 		if(args.length < 1){
 			System.out.println("No parameters detected. Ending program.");
 			return;
 		}
 		csvLoader = new CSVLoader(args[0]);
-		//csvLoader = new CSVLoader(fileName);
+		//csvLoader = new CSVLoader(fileName); #DEBUG
 
-		//Load data
+		//Nacteni dat, do space je prirazeno null, pokud nastane problem (chyti se vyjimka)
 		Space space = csvLoader.parseDataToSpace();
 		if(space == null) {
 			System.out.println("Could not load data from file, exiting program.");
@@ -34,7 +34,6 @@ public class Galaxy_SP2022 {
 		DrawingPanel panel = new DrawingPanel(space);
 
 		window.add(panel, BorderLayout.CENTER);
-		//window.add(toolBar, BorderLayout.NORTH);
 
 
 		panel.addMouseListener(new MouseListener() {
@@ -45,6 +44,7 @@ public class Galaxy_SP2022 {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
+				//posilame relativni souradnice nasi mysi metode getSelected
 				panel.getSelected(new Coord2D(e.getX(),e.getY()));
 			}
 
@@ -64,6 +64,7 @@ public class Galaxy_SP2022 {
 			}
 		});
 
+		//Zjisteni zda uzivatel kliknul na mezernik (mezernik pozastavi simulaci)
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.addKeyEventDispatcher(new KeyEventDispatcher() {
 					@Override
@@ -85,7 +86,7 @@ public class Galaxy_SP2022 {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if(!space.isSimPaused()) space.updateSystem();
+				if(!space.isSimPaused()) space.updateSystem(); //pokud sim je zastavena, system se neupdatuje
 				panel.repaint();
 			}
 		},0,15);
