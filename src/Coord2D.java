@@ -16,16 +16,16 @@ public class Coord2D {
     }
 
     /**
-     * Gets the X-coordinates
-     * @return X-coordinates
+     * Gets the X-coordinate in double value
+     * @return X-coordinate in double value
      */
     public double getX() {
         return x;
     }
 
     /**
-     * Gets the Y-coordinates
-     * @return Y-coordinates
+     * Gets the Y-coordinate in double value
+     * @return Y-coordinate in double value
      */
     public double getY() {
         return y;
