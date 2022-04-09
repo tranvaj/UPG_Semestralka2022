@@ -27,8 +27,8 @@ public class DrawingPanel extends JPanel {
      */
     Color spaceObjSelectedColor = Color.RED;
     /**
-     * This value will increase the size of all objects by x-amount.
-     * Used for debugging.
+     * This value will increase the size of all objects by given amount.
+     * Used for testing.
      */
     private double extraObjScale = 1;
     /**
@@ -76,6 +76,7 @@ public class DrawingPanel extends JPanel {
         //Drawing objects in space start
         AffineTransform old = g2.getTransform();
 
+        //calculate scale value and the needed offsets to center our scaled image
         double scale = getScale();
         double spaceWidth = Math.abs(maxObj.getX() - minObj.getX());
         double spaceHeight = Math.abs(maxObj.getY() - minObj.getY());
@@ -86,11 +87,14 @@ public class DrawingPanel extends JPanel {
         this.currentOffsetX = offsetX;
         this.currentOffsetY = offsetY;
 
+        //this is used to center our scaled objs
+        //wont work properly if used without g2.scale(scale,scale);
         g2.translate(offsetX,offsetY);
+        //fit all objs within the canvas
         g2.scale(scale,scale);
         drawPlanets(g2);
 
-        //Debug rect
+        //Debug rect, used for testing purposes
         //Rectangle2D rect = new Rectangle2D.Double(0, 0,spaceWidth,spaceHeight);
         //g2.setColor(Color.GREEN);
         //g2.draw(rect);
@@ -112,18 +116,14 @@ public class DrawingPanel extends JPanel {
      * @param g2 Graphical context
      */
     public void drawTime(Graphics2D g2){
-        //((System.nanoTime()-startTime)/1000000000.0)*space.getStepTime();
         Double simulatedTime = space.getSimulationTime();
 
+        //Rounding the simulated time so the number flashes less
         simulatedTime = Math.floor(simulatedTime*10000);
         simulatedTime = simulatedTime / 10000;
 
-
-        //Double roundedSimTime = Math.ro
-        //DecimalFormat df = new DecimalFormat("#.#");
-        //String str = "Current time: " + (df.format(simulatedTime)) + "s";
+        //drawing the simulated time
         String str = "Simulated time: " + simulatedTime + "s";
-        //str = String.format("Current time: %f s", df.format(simulatedTime));
         Font font = new Font("Arial",Font.BOLD, 14);
         g2.setFont(font);
         g2.drawString(str,this.getWidth() - g2.getFontMetrics().stringWidth(str),g2.getFontMetrics().getHeight());
@@ -138,9 +138,6 @@ public class DrawingPanel extends JPanel {
         getMinMaxBounds();
         double spaceWidth = Math.abs(maxObj.getX() - minObj.getX());
         double spaceHeight = Math.abs(maxObj.getY() - minObj.getY());
-        //System.out.println(Math.abs(maxObj.getY() - minObj.getY()));
-        //double spaceSize = Math.max(spaceWidth,spaceHeight);
-        //double scale = Math.min(this.getWidth(),this.getHeight())/spaceSize;
         double scaleX = this.getWidth() / spaceWidth;
         double scaleY = this.getHeight() / spaceHeight;
         return Math.min(scaleX,scaleY);
@@ -157,6 +154,8 @@ public class DrawingPanel extends JPanel {
         double y_def = space.getSpaceObjs().get(0).getPos().getY();
         minX = x_def; minY = y_def; maxX =  x_def; maxY = y_def;
         for(SpaceObj a : space.getSpaceObjs()){
+            //basically calculating the bounding box of all the space objects
+            //size of the individual planets is included in the calculation too
             double size = a.getSize() * extraObjScale;
             double x1 = a.getPos().getX() - size/2;
             double y1 = a.getPos().getY() - size/2;
@@ -168,7 +167,8 @@ public class DrawingPanel extends JPanel {
             if(y1 < minY) minY = y1;
             if(y2 > maxY) maxY = y2;
         }
-        //System.out.println("MINX: " + (maxX));
+        //saving the left upper corner into minObj
+        //saving the right lower corner into maxObj
         minObj = new Coord2D(minX,minY);
         maxObj = new Coord2D(maxX,maxY);
     }
@@ -177,7 +177,7 @@ public class DrawingPanel extends JPanel {
      * This method will draw all instances spaceObjs of type "Planet" on
      * given graphical context.
      * Planets are represented as filled ellipses
-     * @param g2
+     * @param g2 Graphical context
      */
     public void drawPlanets(Graphics2D g2){
         g2.setColor(spaceObjDefaultColor);
@@ -188,21 +188,28 @@ public class DrawingPanel extends JPanel {
                 Double yPos = spaceObj.getPos().getY();
                 double size = spaceObj.getSize() * extraObjScale;
 
-                //minimum size
+                //minimum size if planet size is too small (scale included)
                 if(size*currentScale < minObjSize){
                     double temp = size*currentScale;
+                    //changing planet size to minObjSize wont work because of scale
+                    //need to calculate size that will be close to minObjSize after scale transformation
                     double minScale = minObjSize /temp;
                     size = size * minScale;
+                    //this is here because the bounding box gets miscalculated
+                    //getScale updates the bounding box AND the scale so no need to call getMinMaxBounds() again
                     spaceObj.setSize(size);
                     getScale();
                 }
 
-                //-minObj.get(x) abychom posunuli objekt na kladne souradnice -> aby fungoval scale normalne
+                //-minObj.getX() so we push all planets into positive coordinates in X
+                //-minObj.getY() so we push all planets into positive coordinates in Y
+                //this will give us assurance that scale will work as intended
+                //also draw the ellipse in the center of the space object coordinates
                 Ellipse2D el = new Ellipse2D.Double(-minObj.getX()+xPos-(size/2.0),-minObj.getY()+yPos-(size/2.0),size,size);
 
-                //System.out.println("-min :" + -minObj.getX() + " + xPos: " + xPos + "=  " + (-minObj.getX()+xPos-(size/2.0)));
 
-                //selection
+                //implementation of selection/unselection
+                //each element in list below should represent each element in spaceObjs list
                 spaceObjShapeList.add(el);
                 if(selectedObj != null){
                    if(spaceObj.equals(selectedObj)){
@@ -219,7 +226,7 @@ public class DrawingPanel extends JPanel {
 
     /**
      * This method will take in instance of Coord2D and try to evaluate if the coordinates
-     * are contained in one of the drawn spaceObjs
+     * are contained in one of the drawn Shapes that represent the space objects
      * @param mouseCoord Coordinates
      * @return Selected spaceObj
      */
@@ -228,15 +235,16 @@ public class DrawingPanel extends JPanel {
             double scale = currentScale;
             double offsetX = currentOffsetX;
             double offsetY = currentOffsetY;
-
+            //get correct post transformation coordinates
             double mouseX = ((mouseCoord.getX()/scale) - offsetX/scale);
             double mouseY = ((mouseCoord.getY()/scale) - offsetY/scale);
             if(shape.contains(mouseX ,mouseY)){
                 //System.out.println("Clicked!");
-                if(selectedObj != null && selectedObj.equals(space.getSpaceObjs().get(spaceObjShapeList.indexOf(shape)))){
+                int index = spaceObjShapeList.indexOf(shape);
+                if(selectedObj != null && selectedObj.equals(space.getSpaceObjs().get(index))){
                     selectedObj = null;
                 } else{
-                    selectedObj = space.getSpaceObjs().get(spaceObjShapeList.indexOf(shape));
+                    selectedObj = space.getSpaceObjs().get(index);
                 }
             }
         });

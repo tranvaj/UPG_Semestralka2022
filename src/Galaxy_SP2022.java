@@ -17,7 +17,7 @@ public class Galaxy_SP2022 {
 		csvLoader = new CSVLoader(args[0]);
 		//csvLoader = new CSVLoader(fileName); #DEBUG
 
-		//Nacteni dat, do space je prirazeno null, pokud nastane problem (chyti se vyjimka)
+		//Parsing given data into an instance of Space, if unable to do so, variable space is referencing to null
 		Space space = csvLoader.parseDataToSpace();
 		if(space == null) {
 			System.out.println("Could not load data from file, exiting program.");
@@ -44,7 +44,7 @@ public class Galaxy_SP2022 {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				//posilame relativni souradnice nasi mysi metode getSelected
+				//sending relative coordinates of our mousePress into getSelected()
 				panel.getSelected(new Coord2D(e.getX(),e.getY()));
 			}
 
@@ -64,7 +64,7 @@ public class Galaxy_SP2022 {
 			}
 		});
 
-		//Zjisteni zda uzivatel kliknul na mezernik (mezernik pozastavi simulaci)
+		//Detects if user presses spacebar and pauses/unpauses the simulation
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.addKeyEventDispatcher(new KeyEventDispatcher() {
 					@Override
@@ -86,7 +86,7 @@ public class Galaxy_SP2022 {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if(!space.isSimPaused()) space.updateSystem(); //pokud sim je zastavena, system se neupdatuje
+				if(!space.isSimPaused()) space.updateSystem(); //update the system if the simulation is not paused
 				panel.repaint();
 			}
 		},0,15);

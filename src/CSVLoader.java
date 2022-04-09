@@ -23,9 +23,11 @@ public class CSVLoader {
         try(Scanner sc = new Scanner(new File(fileLoc))){
             List<SpaceObj> spaceObjs = new ArrayList<>();
             String[] firstRow = sc.nextLine().split(",");
+            //first row is reserved for gravitational constant and the time step
             double gravConst = Double.parseDouble(firstRow[0]);
             double timeStep = Double.parseDouble(firstRow[1]);
 
+            //load rest of the data accordingly
             while(sc.hasNextLine()){
                 String[] row = sc.nextLine().split(",");
                 String name = row[0];
