@@ -36,11 +36,8 @@ public class CSVLoader {
                 spaceObjs.add(new SpaceObj(name,type,pos,vel,weight));
             }
             return new Space(spaceObjs,gravConst,timeStep);
-        } catch (FileNotFoundException e){
-            System.out.println("Could not find file, returning null.");
-            return null;
-        } catch (IOException e){
-            System.out.println("Undefined error: " + e.getMessage());
+        } catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
             return null;
         }
     }
