@@ -14,7 +14,7 @@ public class SpaceObj {
     //obj weight
     private double weight;
     //size of obj
-    //private double size;
+    private double size;
 
     public SpaceObj(String name, String type, Coord2D pos, Coord2D vel, double weight){
         this.name = name;
@@ -22,13 +22,24 @@ public class SpaceObj {
         this.pos = pos;
         this.vel = vel;
         this.weight = weight;
+        this.size = getRadius() * 2;
     }
 
     //velikost ctverce ktery reprezentuje nas objekt
     //velikost je vypocitana za predpokladu, ze vsechny objekty maji jednotkovou hustotu
     public double getSize(){
+        //vzorec odvozed z jednotkove hustoty, hmotnosti objektu a objem koule
+        //Double r = Math.cbrt(3*weight/4*Math.PI);
+        //Double r2  = Math.sqrt(weight/Math.PI);
+        return size;
+    }
+
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    public double getRadius(){
         Double r = Math.cbrt(3*weight/4*Math.PI);
-        //melo by byt r*2 ale s r to vypada jako podle zadani
         return r;
     }
 

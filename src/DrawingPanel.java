@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class DrawingPanel extends JPanel {
@@ -40,9 +38,7 @@ public class DrawingPanel extends JPanel {
         super.paint(g);
         Graphics2D g2 = (Graphics2D)g;
 
-        /**
-         * Drawing objects in space
-         */
+        //Drawing objects in space start
         AffineTransform old = g2.getTransform();
 
         double scale = getScale();
@@ -60,14 +56,12 @@ public class DrawingPanel extends JPanel {
         drawPlanets(g2);
 
         //Debug rect
-        Rectangle2D rect = new Rectangle2D.Double(0, 0,spaceWidth,spaceHeight);
-        g2.setColor(Color.GREEN);
+        //Rectangle2D rect = new Rectangle2D.Double(0, 0,spaceWidth,spaceHeight);
+        //g2.setColor(Color.GREEN);
         //g2.draw(rect);
 
         g2.setTransform(old);
-        /**
-         * End of drawing objects in space
-         */
+        //Drawing objects in space end
 
         //draw time
         g2.setColor(Color.BLACK);
@@ -120,6 +114,7 @@ public class DrawingPanel extends JPanel {
             double y1 = a.getPos().getY() - size/2;
             double x2 = a.getPos().getX() + size/2;
             double y2 = a.getPos().getY() +  size/2;
+            //System.out.println(a.getName() + ": " + x1 + "," +x2);
             if(x1 < minX) minX = x1;
             if(x2 > maxX) maxX = x2;
             if(y1 < minY) minY = y1;
@@ -138,16 +133,20 @@ public class DrawingPanel extends JPanel {
             if(spaceObj.getType().equals("Planet")){
                 Double xPos = spaceObj.getPos().getX();
                 Double yPos = spaceObj.getPos().getY();
-                double size = spaceObj.getSize()* extraObjScale;
+                double size = spaceObj.getSize() * extraObjScale;
 
                 if(size*currentScale < minObjSize){
                     double temp = size*currentScale;
                     double minScale = minObjSize /temp;
                     size = size * minScale;
+                    spaceObj.setSize(size);
+                    getScale();
                 }
 
                 //-minObj.get(x) abychom posunuli objekt na kladne souradnice -> aby fungoval scale normalne
-                Ellipse2D el = new Ellipse2D.Double(-minObj.getX()+xPos-(size/2),-minObj.getY()+yPos-(size/2),size,size);
+                Ellipse2D el = new Ellipse2D.Double(-minObj.getX()+xPos-(size/2.0),-minObj.getY()+yPos-(size/2.0),size,size);
+
+                //System.out.println("-min :" + -minObj.getX() + " + xPos: " + xPos + "=  " + (-minObj.getX()+xPos-(size/2.0)));
 
                 //selection
                 spaceObjShapeList.add(el);
@@ -173,7 +172,7 @@ public class DrawingPanel extends JPanel {
             double mouseX = ((mouseCoord.getX()/scale) - offsetX/scale);
             double mouseY = ((mouseCoord.getY()/scale) - offsetY/scale);
             if(shape.contains(mouseX ,mouseY)){
-                System.out.println("Clicked!");
+                //System.out.println("Clicked!");
                 if(selectedObj != null && selectedObj.equals(space.getSpaceObjs().get(spaceObjShapeList.indexOf(shape)))){
                     selectedObj = null;
                 } else{
@@ -185,13 +184,16 @@ public class DrawingPanel extends JPanel {
     }
 
     public void drawSelectedInfo(Graphics2D g2){
-        double objSpeed = Math.sqrt(selectedObj.getVel().getX() * selectedObj.getVel().getX() +
-                selectedObj.getVel().getY() * selectedObj.getVel().getY());
-                String strx = String.format("Name: %s | X: %f | Y: %f | Speed: %f m/s",
-                selectedObj.getName(),
-                selectedObj.getPos().getX(),
-                selectedObj.getPos().getY(),
-                objSpeed);        Font font = new Font("Arial",Font.BOLD, 14);
+        // objSpeed = Math.sqrt(selectedObj.getVel().getX() * selectedObj.getVel().getX() + selectedObj.getVel().getY() * selectedObj.getVel().getY());
+        String strx = String.format("Name: %s | Position: [X=%.2f | Y=%.2f] " +
+                        "| Velocity: [X=%.2f | Y=%.2f]",
+            selectedObj.getName(),
+            selectedObj.getPos().getX(),
+            selectedObj.getPos().getY(),
+            selectedObj.getVel().getX(),
+            selectedObj.getVel().getY()
+        );
+        Font font = new Font("Arial",Font.BOLD, 14);
         g2.setFont(font);
         g2.drawString(strx,this.getWidth()/2 - g2.getFontMetrics().stringWidth(strx)/2, this.getHeight() - g2.getFontMetrics().getHeight());
     }

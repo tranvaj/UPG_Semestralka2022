@@ -8,8 +8,15 @@ import javax.swing.*;
 public class Galaxy_SP2022 {
 
 	public static void main(String[] args) {
-		String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\solar.csv";
-		CSVLoader csvLoader = new CSVLoader(fileName);
+		//String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\solar.csv";
+		CSVLoader csvLoader;
+		if(args.length < 1){
+			System.out.println("No parameters detected. Ending program.");
+			return;
+		}
+		csvLoader = new CSVLoader(args[0]);
+		//csvLoader = new CSVLoader(fileName);
+
 		//Load data
 		Space space = csvLoader.parseDataToSpace();
 		if(space == null) {
@@ -20,12 +27,6 @@ public class Galaxy_SP2022 {
 		window.setTitle("Semestralni prace UPG 2022 - Vesmir");
 		window.setMinimumSize(new Dimension(800,600));
 		window.setSize(800, 600);
-		//top menu
-		//JPanel toolBar = new JPanel();
-		//Label label = new Label("Hellodddddddddddd");
-		//label.setMinimumSize(new Dimension(500,500));
-		//toolBar.add(label,BorderLayout.CENTER);
-		//toolBar.setSize(new Dimension(500,500));
 
 
 		long startTime = System.currentTimeMillis();
@@ -39,12 +40,12 @@ public class Galaxy_SP2022 {
 		panel.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				panel.getSelected(new Coord2D(e.getX(),e.getY()));
+				//panel.getSelected(new Coord2D(e.getX(),e.getY()));
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-
+				panel.getSelected(new Coord2D(e.getX(),e.getY()));
 			}
 
 			@Override
@@ -87,7 +88,7 @@ public class Galaxy_SP2022 {
 				if(!space.isSimPaused()) space.updateSystem();
 				panel.repaint();
 			}
-		},0,20);
+		},0,15);
 
 		window.pack(); //udela resize okna dle komponent
 
