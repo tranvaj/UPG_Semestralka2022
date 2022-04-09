@@ -1,6 +1,7 @@
 /**
  * An instance of this class represents a single space object.
- * A space object has a name, type, X Y pos, X Y velocity and weight.
+ * A space object has a name, type, position represented as Coord2D instance,
+ * velocity represented as Coord2D instance and weight.
  */
 public class SpaceObj {
     /**
