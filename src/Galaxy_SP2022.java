@@ -5,7 +5,9 @@ import java.util.TimerTask;
 
 import javax.swing.*;
 /**
- * This class represents the main class, where the entire program gets initiialized
+ * Tato trida reprezentuje hlavni tridu celeho programu.
+ * V teto tride se inicializuje cely program, vcetne nacteni souboru, naslychani uzivatelskych vstupu z klavesnice
+ * nebo z myse a zajistuje opakovane prekleslovani platna.
  */
 public class Galaxy_SP2022 {
 
@@ -19,7 +21,8 @@ public class Galaxy_SP2022 {
 		csvLoader = new CSVLoader(args[0]);
 		//csvLoader = new CSVLoader(fileName); #DEBUG
 
-		//Parsing given data into an instance of Space, if unable to do so, variable space is referencing to null
+		//Konvertujem predane data ze souboru do instance tridy Space, pokud se nenacte soubor spravne, do promenne
+		//space se ulozi null
 		Space space = csvLoader.parseDataToSpace();
 		if(space == null) {
 			System.out.println("Could not load data from file, exiting program.");
@@ -46,7 +49,7 @@ public class Galaxy_SP2022 {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				//sending relative coordinates of our mousePress into getSelected()
+				//posilame relativni souradnice (vuci platnu) mysi pri stisknuti jako parametry metody getSelected
 				panel.getSelected(new Coord2D(e.getX(),e.getY()));
 			}
 
@@ -66,7 +69,8 @@ public class Galaxy_SP2022 {
 			}
 		});
 
-		//Detects if user presses spacebar and pauses/unpauses the simulation
+		//Tato trida detekuje zda uzivatel stisknul mezernik, pokud ano pozastavi se simulace, popripade se obnovi
+		//pokud simulace je uz pozastavena
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.addKeyEventDispatcher(new KeyEventDispatcher() {
 					@Override
@@ -88,7 +92,7 @@ public class Galaxy_SP2022 {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if(!space.isSimPaused()) space.updateSystem(); //update the system if the simulation is not paused
+				if(!space.isSimPaused()) space.updateSystem(); //pokud neni simulace pozastavena, updatne se nas system/vesmir
 				panel.repaint();
 			}
 		},0,15);

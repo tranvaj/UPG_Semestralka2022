@@ -2,7 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents a Space that contains list of space objects, a gravitational constant and simulation time.
+ * Tato trida reprezentuje vesmir, ktery obsahuje vesmirne objekty.
+ * Vesmir ma urcenou vlastni gravitacni konstantu a bezi v simulacnim casu
  */
 public class Space {
     private List<SpaceObj> spaceObjs;
@@ -12,7 +13,7 @@ public class Space {
     private long simStartTime;
     private double simulationTime;
     /**
-     * Given simulation time since the last execution of updateSystem
+     * Cas od posledniho spusteni metody updateSystem
      */
     private double timeSinceLastUpdateAbsolute;
 
@@ -24,9 +25,9 @@ public class Space {
 
     /**
      *
-     * @param spaceObjs List containing instances of SpaceObj
-     * @param G Gravitational constant
-     * @param t Time step
+     * @param spaceObjs Seznam obsahujici vesmirne objekty
+     * @param G Gravitacni konstanta
+     * @param t Krok v case (1s v realnem zivote = t sekund v tomto vesmiru)
      */
     public Space(List<SpaceObj> spaceObjs, double G, double t){
         this.spaceObjs = spaceObjs;
@@ -37,43 +38,44 @@ public class Space {
     }
 
     /**
-     * Gets collection that contains instances of SpaceObj.
-     * @return List containing instances of SpaceObjs
+     * Vraci se seznam vsech vesmirnych objektu ktery existuji v tomto vesmiru
+     * @return Seznam vsech instanci tridy SpaceObj
      */
     public List<SpaceObj> getSpaceObjs() {
         return spaceObjs;
     }
 
     /**
-     * @return Gravitational constant of this instance
+     * @return Gravitacni konstanta tohoto vesmiru
      */
     public double getGravConst() {
         return gravConst;
     }
 
     /**
-     * @return The time step of this instance
+     * @return Krok v case tohoto vesmiru
      */
     public double getStepTime() {
         return stepTime;
     }
 
     /**
-     * Sets the simulation starting time in milliseconds.
-     * @param simStartTime Time in milliseconds
+     * Tato metoda nastavuje pocatecni simulacni cas
+     * @param simStartTime Momentalni cas v milisekundach
      */
     public void setSimStartTime(long simStartTime) {
         this.simStartTime = simStartTime;
     }
 
     private double relativeTimeSinceLastUpdate() {
-        //This gives us time elapsed since  the last execution of the updateSystem method in seconds
+        //odecte se simulacni cas od casu kdy se na posledy spustila metoda updateSystem
+        //ziskame takto ubehnutou dobu od posledniho spusteni metody updateSystem
         return ((getSimulationTime()  -  timeSinceLastUpdateAbsolute));
     }
 
     /**
-     * Gets the simulation time in seconds.
-     * @return The simulation time in seconds
+     * Tato metoda vraci simulacni cas v sekundach
+     * @return Simulacni cas v sekundach
      */
     public double getSimulationTime() {
         simulationTime = (getCurrentTime()/1000.0)*stepTime;
@@ -82,75 +84,74 @@ public class Space {
 
     private long getCurrentTime(){
         if(simPaused) {
-            //updates pauseTime to correctly subtract from current time while paused.
+            //jelikoz getSimulationTime vyvolava tento cas
+            //updatneme ubehnutou dobu od zacatku pauzy
             updatePauseTime();
         }
         return (System.currentTimeMillis() - simStartTime) - pausedTime;
     }
 
     /**
-     * Pauses the simulation.
+     * Zastavi simulaci.
      */
     public void startPause() {
         this.simPaused = true;
-        //This exists to keep track of time elapsed since the
-        // start of the pause (so we can later subtract it from current time to "stop" time)
+        //Ulozime si cas od zacatku pauzy abychom mohli napocitat ubehnutou dobu od pauzy
         this.pauseStart = System.currentTimeMillis();
         updatePauseTime();
     }
 
     private void updatePauseTime() {
-        //Calculates time to decrease from the current time to effectively "stop" time.
-        //pausedTimeTotal is the sum of all paused times, needed to be able to pause time more than once.
+        //Abychom zastavili cas, musime odecitat ubehnutou dobu od zacatku pauzy z momentalniho casu.
+        //Takto jakoby "pozastavime" cas
+        //Aby fungovala pauza vicekrat, musime jeste odecist sumu vsech dob z predchozich pauz
         pausedTime = (System.currentTimeMillis() - pauseStart) + pausedTimeTotal;
     }
 
     /**
-     * Unpauses the simulation
+     * Obnovi simulaci.
      */
     public void stopPause(){
         this.simPaused = false;
-        //pausedTimeTotal keeps the "total pause time"
-        //pausedTime already has the sum of all paused times in it (method updatePauseTime() is doing it)
-        //,so no need to sum pausedTimeTotal with it here.
+        //pri obnoveni simulace se ulozi ubehnuta doba od zacatku pauzy sem (v pausedTime je ulozena i ubehnuta doba vsech predchozich pauz)
+        //az zacne dalsi pauza, tento cas bude ulozeny do pausedTime, viz metoda updatePauseTime
         pausedTimeTotal = pausedTime;
     }
 
     /**
-     * Determines whether the simulation is paused or not.
-     * @return true or false
+     * Tato metoda vraci, zda je simulace pozastavena nebo ne
+     * @return Vraci, zda je simulace pozastavena nebo ne
      */
     public boolean isSimPaused() {
         return simPaused;
     }
 
     /**
-     * Updates the position and velocity of all SpaceObjs according to the simulation time
+     * Vypocita a ulozi nove pozice a rychlosti vsech vesmirnych objektu v simulacnim case
      */
     public void updateSystem(){
-        //Simulation does not work properly when two objects get too close
-        //Therefore collision is needed for proper simulation
-        //Collision will be implemented in the second part of this semestral work
-        //TODO: COLLISION BETWEEN SPACE OBJECTS
+        //Simulace nefunguje spravne, pokud jsou vesmirne objekty moc blizko sebe
+        //Implementace kolize je potrebna na vyreseni tohoto problemu
+        //Kolize bude implementovana ve druhe casti semestralni prace
+        //TODO: KOLIZE MEZI VESMIRNYMA OBJEKTAMA
 
-
-        //Saving the time elapsed since last execution of this method into variable t
+        //Ubehnuta doba od posledniho spusteni teto metody se ulozi do promenne t
         double t = relativeTimeSinceLastUpdate();
 
-        //The minimum change in time
+        //Minimalni zmena v case
         double dt_min = stepTime/2000;
 
         while(t > 0){
             double dt = Math.min(t, dt_min);
 
-            //Calculate all SpaceObj accelerations and save them into a list
+            //Vypocitame zrychleni a ulozime do seznamu
             List<Coord2D> accelerationList = new ArrayList<>();
             for(int i = 0; i < spaceObjs.size(); i++){
                 Coord2D acceleration = getAcceleration(i);
                 accelerationList.add(i,acceleration);
             }
 
-            //Update velocity and position for each planet
+            //Vypocitani a ulozeni novych pozic a rychlosti vesmirnych objektu
             for(int i = 0; i < spaceObjs.size(); i++){
                 SpaceObj spaceObj = getSpaceObjs().get(i);
                 double speedX = spaceObj.getVel().getX() + 0.5 * dt * accelerationList.get(i).getX();
@@ -165,14 +166,14 @@ public class Space {
             }
             t = t-dt;
         }
-        //Saves the current simulation time into timeSinceLastUpdateAbsolute
+        //Ulozime cas od posledniho spusteni teto metody
         timeSinceLastUpdateAbsolute = getSimulationTime();
     }
 
     /**
-     * Calculate acceleration of SpaceObj associated with given index.
-     * @param index Index of the SpaceObj in the collection spaceObjs
-     * @return Acceleration represented by an instance of Coord2D.
+     * Tato metoda vypocita zrychleni vesmirneho objektu v seznamu spaceObjs na indexu predany parametrem
+     * @param index Index vesmirneho objektu obsazeny v seznamu spaceObjs
+     * @return Zrychleni reprezentovany instanci tridy Coord2D
      */
     private Coord2D getAcceleration(int index){
         SpaceObj obj_i = spaceObjs.get(index);

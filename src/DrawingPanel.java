@@ -7,60 +7,61 @@ import java.util.ArrayList;
 
 public class DrawingPanel extends JPanel {
     /**
-     * Minimum bounding coordinates.
+     * Levy horni roh obdelniku ktery obsahuje vsechny vesmirne objekty pri minimalni velikosti
      */
     private Coord2D minObj;
     /**
-     * Maximum bounding coordinates.
+     * Pravy dolni roh obdelniku ktery obsahuje vsechny vesmirne objekty pri minimalni velikosti
      */
     private Coord2D maxObj;
     /**
-     * Instance of Space, contains list of all spaceObj.
+     * Instance tridy Space, obsahuje seznam vsech vesmirnych objektu
      */
     private Space space;
     /**
-     * Default color associated with instance of spaceObj.
+     * Vychozi barva vesmirneho objektu
      */
     Color spaceObjDefaultColor = Color.BLUE;
     /**
-     * Default selected color associated with selected instance of spaceObj.
+     * Vychozi barva vybraneho vesmirneho objektu
      */
     Color spaceObjSelectedColor = Color.RED;
     /**
-     * This value will increase the size of all objects by given amount.
-     * Used for testing.
+     * Zvetseni velikosti vsech objektu danou hodnotou
+     * Vyuzivany k testingu
      */
     private double extraObjScale = 1;
     /**
-     * Minimum px size of an object that represents instance of spaceObj.
+     * Minimalni velikost vesmirneho objektu v pixelech
      */
     private double minObjSize = 5;
 
     /**
-     * List that contains all instances of Shape that represent instances of spaceObj.
+     * Seznam ktery obsahuje vsechny instance tridy Shape, kde kazda jedna instance reprezentuje jednu instanci
+     * v seznamu spaceObj
      */
     java.util.List<Shape> spaceObjShapeList;
     /**
-     * Reference to currently selected spaceObj.
+     * Reference na momentalne vybrany vesmirny objekt
      */
     SpaceObj selectedObj;
 
     /**
-     * Scale value
+     * Scale hodnota
      */
     private double currentScale;
     /**
-     * Offset X that is needed to center our Space.
+     * X-ova hodnota kterou potrebujem k vycentrovani naseho vesmiru v platne
      */
     private double currentOffsetX;
     /**
-     * Offset Y that is needed to center our Space.
+     * Y-ova hodnota kterou potrebujem k vycentrovani naseho vesmiru v platne
      */
     private double currentOffsetY;
 
     /**
-     * Constructor of our drawing panel.
-     * @param space Instance of Space
+     * Konstruktor teto tridy
+     * @param space Instance tridy Space
      */
     public DrawingPanel(Space space){
         this.space = space;
@@ -73,10 +74,10 @@ public class DrawingPanel extends JPanel {
         super.paint(g);
         Graphics2D g2 = (Graphics2D)g;
 
-        //Drawing objects in space start
+        //Vykresleni vesmirnych objektu z vesmiru start
         AffineTransform old = g2.getTransform();
 
-        //calculate scale value and the needed offsets to center our scaled image
+        //vypocitani scale hodnoty a offset na vycentrovani vesmiru
         double scale = getScale();
         double spaceWidth = Math.abs(maxObj.getX() - minObj.getX());
         double spaceHeight = Math.abs(maxObj.getY() - minObj.getY());
@@ -87,22 +88,21 @@ public class DrawingPanel extends JPanel {
         this.currentOffsetX = offsetX;
         this.currentOffsetY = offsetY;
 
-        //this is used to center our scaled objs
-        //wont work properly if used without g2.scale(scale,scale);
+        //vycentrovani vesmiru
         g2.translate(offsetX,offsetY);
-        //fit all objs within the canvas
+        //aby vsechny vesmirne objekty byly viditelne v kazdym case a vyplnovaly cely volny prostor tohoto platna
         g2.scale(scale,scale);
         drawPlanets(g2);
 
-        //Debug rect, used for testing purposes
+        //Debug obdelnik, pro testovani
         //Rectangle2D rect = new Rectangle2D.Double(0, 0,spaceWidth,spaceHeight);
         //g2.setColor(Color.GREEN);
         //g2.draw(rect);
 
         g2.setTransform(old);
-        //Drawing objects in space end
+        //konec vykreslovani vesmirnych objektu
 
-        //draw time
+        //vykresleni simulacniho casu
         g2.setColor(Color.BLACK);
         drawTime(g2);
 
@@ -112,17 +112,17 @@ public class DrawingPanel extends JPanel {
     }
 
     /**
-     * Takes simulation time information from instance of Space and draws it on given graphical context
-     * @param g2 Graphical context
+     * Vykresli simulacni cas na platno
+     * @param g2 Graficky kontext
      */
     public void drawTime(Graphics2D g2){
         Double simulatedTime = space.getSimulationTime();
 
-        //Rounding the simulated time so the number flashes less
+        //Zaokrouhleni simulacniho casu
         simulatedTime = Math.floor(simulatedTime*10000);
         simulatedTime = simulatedTime / 10000;
 
-        //drawing the simulated time
+        //Vykresleni simulacniho casu
         //String str = "Simulated time: " + simulatedTime + "s";
         String str = String.format("Simulated time: %.3f s", simulatedTime);
         Font font = new Font("Arial",Font.BOLD, 14);
@@ -131,9 +131,9 @@ public class DrawingPanel extends JPanel {
     }
 
     /**
-     * Gets an double value that represents the scale value needed to fit
-     * all planets within our available canvas size
-     * @return Scale value needed to fit all planets within our available canvas size
+     * Vraci scale hodnotu ktera nam zvetsi/zmensi vesmir tak, aby vyplnoval cely prostor naseho platna a
+     * aby byly videt vsechny vesmirny objekty v kazdym case
+     * @return Scale hodnota
      */
     public double getScale(){
         getMinMaxBounds();
@@ -145,10 +145,9 @@ public class DrawingPanel extends JPanel {
     }
 
     /**
-     * This method will calculate the upper-left and bottom-right coordinates of the
-     * rectangle that minimally bounds all of our space objects.
-     * This method takes the size of each individual space objects into account when calculating the bounds.
-     * These coordinates are saved in class attributes minObj and maxObj.
+     * Tato metoda nam vypocita levy horni roh a pravy dolni roh obdelnika ktery minimalne ohranicuje vsechny nase
+     * vesmirne objekty. V kalkulaci se pocita s velikostmi vesmirnych objektu.
+     * Tyto souradnice jsou ulozeny do atributu minObj a maxObj.
      */
     public void getMinMaxBounds(){
         double minX,minY,maxX,maxY;
@@ -156,8 +155,8 @@ public class DrawingPanel extends JPanel {
         double y_def = space.getSpaceObjs().get(0).getPos().getY();
         minX = x_def; minY = y_def; maxX =  x_def; maxY = y_def;
         for(SpaceObj a : space.getSpaceObjs()){
-            //basically calculating the bounding box of all the space objects
-            //size of the individual planets is included in the calculation too
+            //vypocitani rohu naseho ohranicujiciho obdelnika
+            //velikosti jsou brany v potaz pri pocitani
             double size = a.getSize() * extraObjScale;
             double x1 = a.getPos().getX() - size/2;
             double y1 = a.getPos().getY() - size/2;
@@ -169,17 +168,14 @@ public class DrawingPanel extends JPanel {
             if(y1 < minY) minY = y1;
             if(y2 > maxY) maxY = y2;
         }
-        //saving the left upper corner into minObj
-        //saving the right lower corner into maxObj
+        //ulozeni pozic rohu do techto dvou atributu
         minObj = new Coord2D(minX,minY);
         maxObj = new Coord2D(maxX,maxY);
     }
 
     /**
-     * This method will draw all instances spaceObjs of type "Planet" on
-     * given graphical context.
-     * Planets are represented as filled ellipses
-     * @param g2 Graphical context
+     * Tato metoda vykresli vsechny planety v nasem vesmiru na nas graficky kontext
+     * @param g2 Graficky kontext
      */
     public void drawPlanets(Graphics2D g2){
         g2.setColor(spaceObjDefaultColor);
@@ -191,27 +187,25 @@ public class DrawingPanel extends JPanel {
                 double size = spaceObj.getSize() * extraObjScale;
 
                 //minimum size if planet size is too small (scale included)
+                //minimalni velikost pokud (velikost planet * scale) je moc mala
                 if(size*currentScale < minObjSize){
                     double temp = size*currentScale;
-                    //changing planet size to minObjSize wont work because of scale
-                    //need to calculate size that will be close to minObjSize after scale transformation
+                    //vypocitame velikost ktera si bude skoro rovna velikosti minObjSize po vyuziti scale
                     double minScale = minObjSize /temp;
                     size = size * minScale;
-                    //this is here because the bounding box gets miscalculated
-                    //getScale updates the bounding box AND the scale so no need to call getMinMaxBounds() again
+                    //nas ohranicujici obdelnik je ted spatne vypocitany,
+                    // potrebujem zavolat getScale, ktery vyvola v sobe getMinMaxBounds
                     spaceObj.setSize(size);
                     getScale();
                 }
 
-                //-minObj.getX() so we push all planets into positive coordinates in X
-                //-minObj.getY() so we push all planets into positive coordinates in Y
-                //this will give us assurance that scale will work as intended
-                //also draw the ellipse in the center of the space object coordinates
+                //-minObj.getX a -minObj.getY aby byly nase planety v kladnych souradnicich
+                //zajistujeme ze scale bude fungovat normalne
+                //vykreslujeme vyplnene kruznice jehoz stredem jsou souradnice planet
                 Ellipse2D el = new Ellipse2D.Double(-minObj.getX()+xPos-(size/2.0),-minObj.getY()+yPos-(size/2.0),size,size);
 
 
-                //implementation of selection/unselection
-                //each element in list below should represent each element in spaceObjs list
+                //implementace vyberu/zruseni vyberu planety
                 spaceObjShapeList.add(el);
                 if(selectedObj != null){
                    if(spaceObj.equals(selectedObj)){
@@ -227,17 +221,17 @@ public class DrawingPanel extends JPanel {
     }
 
     /**
-     * This method will take in instance of Coord2D and try to evaluate if the coordinates
-     * are contained in one of the drawn Shapes that represent the space objects
-     * @param mouseCoord Coordinates
-     * @return Selected spaceObj
+     * Tato metoda nacte souradnice a snazi se vypocitat zda jsou tyto souradnice
+     * obsazeny v nejake jedne instanci Shape, kde tato instance reprezentuje jeden vesmirny objekt
+     * @param mouseCoord Souradnice
+     * @return Vybrany vesmirny objekt
      */
     public SpaceObj getSelected(Coord2D mouseCoord) {
         spaceObjShapeList.forEach(shape -> {
             double scale = currentScale;
             double offsetX = currentOffsetX;
             double offsetY = currentOffsetY;
-            //get correct post transformation coordinates
+            //ziskame spravne post transform souradnice
             double mouseX = ((mouseCoord.getX()/scale) - offsetX/scale);
             double mouseY = ((mouseCoord.getY()/scale) - offsetY/scale);
             if(shape.contains(mouseX ,mouseY)){
@@ -254,9 +248,9 @@ public class DrawingPanel extends JPanel {
     }
 
     /**
-     * Draws position, velocity and name of reference currently selected spaceObj
-     * in the middle bottom of the screen
-     * @param g2 The graphic context where the info should be drawn
+     * Vykresli pozici, rychlost a nazev vybraneho vesmirneho objektu
+     * v dolni stredni casti platna na graficky kontext
+     * @param g2 Graficky kontext
      */
     public void drawSelectedInfo(Graphics2D g2){
         // objSpeed = Math.sqrt(selectedObj.getVel().getX() * selectedObj.getVel().getX() + selectedObj.getVel().getY() * selectedObj.getVel().getY());

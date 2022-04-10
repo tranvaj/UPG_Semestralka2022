@@ -1,14 +1,14 @@
 /**
- * This class represents X,Y coordinates of an object
+ * Tato trida reprezentuje X,Y souradnice. Vyuziva se navrhovy vzor Prepravka.
  */
 public class Coord2D {
     private double x;
     private double y;
 
     /**
-     * Double representation of X,Y coordinates of an object
-     * @param x coordinates
-     * @param y coordinates
+     * Konstruktor, ktery si ulozi predane X-ove a Y-ove souradnice do svych atributu
+     * @param x X-ove souradnice
+     * @param y Y-ove souradnice
      */
     public Coord2D(double x, double y){
         this.x = x;
@@ -16,23 +16,23 @@ public class Coord2D {
     }
 
     /**
-     * Gets the X-coordinate in double value
-     * @return X-coordinate in double value
+     * Vraci x-ove souradnice
+     * @return X-ove souradnice vraceny jako double
      */
     public double getX() {
         return x;
     }
 
     /**
-     * Gets the Y-coordinate in double value
-     * @return Y-coordinate in double value
+     * Vraci y-ove souradnice
+     * @return Y-souradnice vraceny jako double
      */
     public double getY() {
         return y;
     }
 
     /**
-     * @return String representation of this instance
+     * @return String reprezentance teto instance tridy
      */
     @Override
     public String toString() {

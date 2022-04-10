@@ -1,41 +1,41 @@
 /**
- * An instance of this class represents a single space object.
- * A space object has a name, type, position represented as Coord2D instance,
- * velocity represented as Coord2D instance and weight.
+ * Instance teto tridy predstavuje jeden vesmirny objekt.
+ * Vesmirny objekt ma jmeno,
+ * typ, pozici a rychlost reprezentovany instancemi tridy Coord2D a vahu.
  */
 public class SpaceObj {
     /**
-     * Name of the space object represented by instance of String
+     * Nazev vesmirneho objektu
      */
     private String name;
     /**
-     * Type of the space object represented by instance of String
+     * Typ vesmirneho objektu
      */
     private String type;
     /**
-     * X,Y coord of space object position
+     * Pozice vesmirneho objektu reprezentovany instanci tridy Coord2D
      */
     private Coord2D pos;
     /**
-     * X,Y coord of space object velocity
+     * Rychlost vesmirneho objektu reprezentovany instanci tridy Coord2D
      */
     private Coord2D vel;
     /**
-     * Space object weight (kg)
+     * Vaha vesmirneho objektu (kg)
      */
     private double weight;
     /**
-     * Size of space object (m)
+     * Velikost vesmirneho objektu (m)
      */
     private double size;
 
     /**
-     * Constructor of SpaceObj
-     * @param name Name
-     * @param type Type
-     * @param pos Position represented by instance of Coord2D
-     * @param vel Velocity represented by instance of Coord2D
-     * @param weight Weight of the space object
+     * Konstruktor pro vesmirny objekt
+     * @param name Nazev
+     * @param type Typ
+     * @param pos Pozice vesmirneho objektu reprezentovany instanci tridy Coord2D
+     * @param vel Rychlost vesmirneho objektu reprezentovany instanci tridy Coord2D
+     * @param weight Vaha vesmirneho objektu (kg)
      */
     public SpaceObj(String name, String type, Coord2D pos, Coord2D vel, double weight){
         this.name = name;
@@ -48,48 +48,49 @@ public class SpaceObj {
 
     /**
      * Gets the radius of the spaceObj assuming density is equal to 1 and volume is represented by a sphere.
-     * @return Radius of this instance
+     * Vraci se polomer tohoto vesmirneho objektu. Predpoklada se jednotkova hustota a vyuziva se objem koule
+     * @return Polomer tohoto objektu
      */
     public double getRadius(){
         Double r = Math.cbrt(3*weight/4*Math.PI);
         return r;
     }
 
-    //GETTERS AND SETTERS
+    //GETTERY A SETTERY
 
     /**
-     * @return The size of the object
+     * @return Velikost vesmirneho objektu
      */
     public double getSize(){
         return size;
     }
 
     /**
-     * Sets the size of the object.
-     * @param size Size
+     * Nastavi velikost vesmirneho objektu
+     * @param size Velikost
      */
     public void setSize(double size) {
         this.size = size;
     }
 
     /**
-     * Sets the position coordinates of the object
-     * @param pos Instance of Coord2D
+     * Nastavi pozici vesmirneho objektu
+     * @param pos Instance tridy Coord2D
      */
     public void setPos(Coord2D pos) {
         this.pos = pos;
     }
 
     /**
-     * Sets the velocity coordinates of the object
-     * @param vel Instance of Coord2D
+     * Nastavi rychlost vesmirneho objektu
+     * @param vel Instance tridy Coord2D
      */
     public void setVel(Coord2D vel) {
         this.vel = vel;
     }
 
     /**
-     * @return Name of the object.
+     * @return Nazev vesmirneho objektu
      */
     public String getName() {
         return name;
@@ -97,35 +98,35 @@ public class SpaceObj {
 
     /**
      *
-     * @return Type of the object.
+     * @return Typ vesmirneho objektu
      */
     public String getType() {
         return type;
     }
 
     /**
-     * @return Instance of Coord2D representing position.
+     * @return Pozice vesmirneho objektu
      */
     public Coord2D getPos() {
         return pos;
     }
 
     /**
-     * @return Instance of Coord2D representing velocity
+     * @return Rychlost vesmirneho objektu
      */
     public Coord2D getVel() {
         return vel;
     }
 
     /**
-     * @return Weight of the object
+     * @return Vaha vesmirneho objektu
      */
     public double getWeight() {
         return weight;
     }
 
     /**
-     * @return Instance of String that represents this object.
+     * @return String ktery reprezentuje tuto instanci
      */
     @Override
     public String toString() {

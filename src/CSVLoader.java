@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * An instance of this class loads and parses a CSV file
- * The instance will provide a method with which you can
- * transform data into an instance of space;
+ * Instance teto tridy nacita a zpracovava soubor ve formatu CSV.
+ * V teto tride je poskytnuta metoda, ktera ze souboru po zpracovani vrati
+ * instanci tridy Space
  * @author Vaclav Tran
  *
  */
@@ -23,11 +23,11 @@ public class CSVLoader {
         try(Scanner sc = new Scanner(new File(fileLoc))){
             List<SpaceObj> spaceObjs = new ArrayList<>();
             String[] firstRow = sc.nextLine().split(",");
-            //first row is reserved for gravitational constant and the time step
+            //prvni radek je grav. konstanta a krok v case
             double gravConst = Double.parseDouble(firstRow[0]);
             double timeStep = Double.parseDouble(firstRow[1]);
 
-            //load rest of the data accordingly
+            //zpracovani zbylych radku
             while(sc.hasNextLine()){
                 String[] row = sc.nextLine().split(",");
                 String name = row[0];
