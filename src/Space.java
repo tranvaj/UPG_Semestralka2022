@@ -128,6 +128,12 @@ public class Space {
      * Updates the position and velocity of all SpaceObjs according to the simulation time
      */
     public void updateSystem(){
+        //Simulation does not work properly when two objects get too close
+        //Therefore collision is needed for proper simulation
+        //Collision will be implemented in the second part of this semestral work
+        //TODO: COLLISION BETWEEN SPACE OBJECTS
+
+
         //Saving the time elapsed since last execution of this method into variable t
         double t = relativeTimeSinceLastUpdate();
 

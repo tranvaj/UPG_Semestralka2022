@@ -4,7 +4,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.*;
-
+/**
+ * This class represents the main class, where the entire program gets initiialized
+ */
 public class Galaxy_SP2022 {
 
 	public static void main(String[] args) {
