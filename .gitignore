@@ -30,3 +30,5 @@ _ReSharper*/
 #Nuget packages folder
 packages/
 *.class
+/.idea/
+/out/
