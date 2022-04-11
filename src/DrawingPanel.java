@@ -181,10 +181,11 @@ public class DrawingPanel extends JPanel {
         g2.setColor(spaceObjDefaultColor);
         spaceObjShapeList = new ArrayList<>();
         space.getSpaceObjs().forEach(spaceObj -> {
-            if(spaceObj.getType().equals("Planet")){
+            if(spaceObj.getType().equals("Planet") || spaceObj.getType().equals("Comet")){
                 Double xPos = spaceObj.getPos().getX();
                 Double yPos = spaceObj.getPos().getY();
                 double size = spaceObj.getSize() * extraObjScale;
+                //System.out.println(spaceObj.getName() + ":" + size);
 
                 //minimalni velikost pokud (velikost planet * scale) je moc mala
                 if(size*currentScale < minObjSize){
