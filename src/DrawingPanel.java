@@ -186,7 +186,6 @@ public class DrawingPanel extends JPanel {
                 Double yPos = spaceObj.getPos().getY();
                 double size = spaceObj.getSize() * extraObjScale;
 
-                //minimum size if planet size is too small (scale included)
                 //minimalni velikost pokud (velikost planet * scale) je moc mala
                 if(size*currentScale < minObjSize){
                     double temp = size*currentScale;

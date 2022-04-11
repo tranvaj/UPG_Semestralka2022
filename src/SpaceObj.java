@@ -47,7 +47,6 @@ public class SpaceObj {
     }
 
     /**
-     * Gets the radius of the spaceObj assuming density is equal to 1 and volume is represented by a sphere.
      * Vraci se polomer tohoto vesmirneho objektu. Predpoklada se jednotkova hustota a vyuziva se objem koule
      * @return Polomer tohoto objektu
      */
