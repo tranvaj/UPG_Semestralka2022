@@ -8,9 +8,14 @@ import javax.swing.*;
  * Tato trida reprezentuje hlavni tridu celeho programu.
  * V teto tride se inicializuje cely program, vcetne nacteni souboru, naslychani uzivatelskych vstupu z klavesnice
  * nebo z myse a zajistuje opakovane prekleslovani platna.
+ * @author Vaclav Tran
  */
 public class Galaxy_SP2022 {
 
+	/**
+	 * Hlavni trida
+	 * @param args Vstupni parametry
+	 */
 	public static void main(String[] args) {
 		//String fileName = "E:\\FAVZCU\\KIV-UPG\\Semestralka\\galaxy_sp_2022\\data\\solar.csv"; #DEBUG
 		CSVLoader csvLoader;

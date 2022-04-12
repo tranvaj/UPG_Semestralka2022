@@ -13,12 +13,23 @@ import java.util.Scanner;
  *
  */
 public class CSVLoader {
-    String fileLoc;
+    /**
+     * Ceska k souboru
+     */
+    private String fileLoc;
 
+    /**
+     * Konstruktor, ktery ulozi cestu souboru, ktery se bude nacitat, do atributu fileLoc
+     * @param fileLoc Cesta k souboru, ktery se bude nacitat
+     */
     public CSVLoader(String fileLoc){
         this.fileLoc = fileLoc;
     }
 
+    /**
+     * Konvertuje data na instanci tridy Space
+     * @return Instanci tridy Space nastavenou podle specifikaci nactenych dat
+     */
     public Space parseDataToSpace() {
         try(Scanner sc = new Scanner(new File(fileLoc))){
             List<SpaceObj> spaceObjs = new ArrayList<>();

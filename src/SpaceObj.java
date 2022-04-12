@@ -2,6 +2,7 @@
  * Instance teto tridy predstavuje jeden vesmirny objekt.
  * Vesmirny objekt ma jmeno,
  * typ, pozici a rychlost reprezentovany instancemi tridy Coord2D a vahu.
+ * @author Vaclav Tran
  */
 public class SpaceObj {
     /**
@@ -58,6 +59,7 @@ public class SpaceObj {
     //GETTERY A SETTERY
 
     /**
+     * Vraci velikost vesmirneho objektu
      * @return Velikost vesmirneho objektu
      */
     public double getSize(){
@@ -89,6 +91,7 @@ public class SpaceObj {
     }
 
     /**
+     * Vraci nazev vesmirneho objektu
      * @return Nazev vesmirneho objektu
      */
     public String getName() {
@@ -96,7 +99,7 @@ public class SpaceObj {
     }
 
     /**
-     *
+     * Vraci typ vesmirneho objektu
      * @return Typ vesmirneho objektu
      */
     public String getType() {
@@ -104,6 +107,7 @@ public class SpaceObj {
     }
 
     /**
+     * Vraci pozici vesmirneho objektu
      * @return Pozice vesmirneho objektu
      */
     public Coord2D getPos() {
@@ -111,6 +115,7 @@ public class SpaceObj {
     }
 
     /**
+     * Vraci rychlost vesmirneho objektu
      * @return Rychlost vesmirneho objektu
      */
     public Coord2D getVel() {
@@ -118,6 +123,7 @@ public class SpaceObj {
     }
 
     /**
+     * Vraci vahu vesmirneho objektu
      * @return Vaha vesmirneho objektu
      */
     public double getWeight() {
@@ -125,6 +131,7 @@ public class SpaceObj {
     }
 
     /**
+     * Vraci String reprezentaci instance teto tridy
      * @return String ktery reprezentuje tuto instanci
      */
     @Override

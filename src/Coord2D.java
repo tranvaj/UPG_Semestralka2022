@@ -1,5 +1,6 @@
 /**
  * Tato trida reprezentuje X,Y souradnice. Vyuziva se navrhovy vzor Prepravka.
+ * @author Vaclav Tran
  */
 public class Coord2D {
     private double x;
@@ -32,6 +33,7 @@ public class Coord2D {
     }
 
     /**
+     * Vraci String reprezentaci instance teto tridy
      * @return String reprezentance teto instance tridy
      */
     @Override

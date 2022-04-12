@@ -4,6 +4,7 @@ import java.util.List;
 /**
  * Tato trida reprezentuje vesmir, ktery obsahuje vesmirne objekty.
  * Vesmir ma urcenou vlastni gravitacni konstantu a bezi v simulacnim casu
+ * @author Vaclav Tran
  */
 public class Space {
     private List<SpaceObj> spaceObjs;
@@ -46,6 +47,7 @@ public class Space {
     }
 
     /**
+     * Vraci gravitacni konstantu vesmiru
      * @return Gravitacni konstanta tohoto vesmiru
      */
     public double getGravConst() {
@@ -53,6 +55,7 @@ public class Space {
     }
 
     /**
+     * Vraci krok v case vesmiru
      * @return Krok v case tohoto vesmiru
      */
     public double getStepTime() {

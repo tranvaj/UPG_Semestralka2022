@@ -5,6 +5,10 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+/**
+ * Instance teto tridy reprezentuje platno, na ktery se bude vykreslovat vesmir.
+ * @author Vaclav Tran
+ */
 public class DrawingPanel extends JPanel {
     /**
      * Levy horni roh obdelniku ktery obsahuje vsechny vesmirne objekty pri minimalni velikosti
@@ -69,6 +73,10 @@ public class DrawingPanel extends JPanel {
         this.setPreferredSize(new Dimension(800, 600));
     }
 
+    /**
+     * Metoda vykresluje na graficky kontext
+     * @param g Graficky kontext
+     */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
