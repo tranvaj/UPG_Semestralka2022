@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"<Unnamed>","l":"Coord2D"},{"p":"<Unnamed>","l":"CSVLoader"},{"p":"<Unnamed>","l":"DrawingPanel"},{"p":"<Unnamed>","l":"Galaxy_SP2022"},{"p":"<Unnamed>","l":"Space"},{"p":"<Unnamed>","l":"SpaceObj"}];updateSearchResults();
