@@ -124,8 +124,8 @@ public class Galaxy_SP2022 {
 			public void run() {
 
 				if(!space.isSimPaused()) { //pokud neni simulace pozastavena, updatne se nas system/vesmir
-					space.updateSystem();
 					space.checkCollision();
+					space.updateSystem();
 					//kod zajistujici aktualizaci grafu rychlosti vybraneho objektu
 					if(panel.getSelectedObj() != null){
 						space.trackPlanetVel(panel.getSelectedObj());
