@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Instance teto tridy reprezentuje platno, na ktery se bude vykreslovat vesmir.
@@ -114,8 +114,10 @@ public class DrawingPanel extends JPanel {
         g2.setColor(Color.BLACK);
         drawTime(g2);
 
-        if(selectedObj != null) {
+        if(selectedObj != null && space.getSpaceObjs().contains(selectedObj)) {
             drawSelectedInfo(g2);
+        } else if(!space.getSpaceObjs().contains(selectedObj)){
+            selectedObj = null;
         }
     }
 
@@ -181,13 +183,14 @@ public class DrawingPanel extends JPanel {
         maxObj = new Coord2D(maxX,maxY);
     }
 
+
     /**
      * Tato metoda vykresli vsechny planety v nasem vesmiru na nas graficky kontext
      * @param g2 Graficky kontext
      */
     public void drawPlanets(Graphics2D g2){
         g2.setColor(spaceObjDefaultColor);
-        spaceObjShapeList = new ArrayList<>();
+        spaceObjShapeList = new LinkedList<>();
         space.getSpaceObjs().forEach(spaceObj -> {
             if(spaceObj.getType().equals("Planet") || spaceObj.getType().equals("Comet")){
                 Double xPos = spaceObj.getPos().getX();
@@ -203,7 +206,7 @@ public class DrawingPanel extends JPanel {
                     size = size * minScale;
                     //nas ohranicujici obdelnik je ted spatne vypocitany,
                     // potrebujem zavolat getScale, ktery vyvola v sobe getMinMaxBounds
-                    spaceObj.setSize(size);
+                    //spaceObj.setSize(size);
                     getScale();
                 }
 
@@ -235,6 +238,7 @@ public class DrawingPanel extends JPanel {
      * @return Vybrany vesmirny objekt
      */
     public SpaceObj getSelected(Coord2D mouseCoord) {
+        AtomicBoolean found = new AtomicBoolean(false);
         spaceObjShapeList.forEach(shape -> {
             double scale = currentScale;
             double offsetX = currentOffsetX;
@@ -250,8 +254,21 @@ public class DrawingPanel extends JPanel {
                 } else{
                     selectedObj = space.getSpaceObjs().get(index);
                 }
+                found.set(true);
             }
         });
+        if(found.get()){
+            return selectedObj;
+        } else{
+            return null;
+        }
+    }
+
+    /**
+     * Vraci vybrany vesmirny objekt
+     * @return Vybrany vesmirny objekt
+     */
+    public SpaceObj getSelectedObj() {
         return selectedObj;
     }
 

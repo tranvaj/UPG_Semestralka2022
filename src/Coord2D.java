@@ -17,6 +17,30 @@ public class Coord2D {
     }
 
     /**
+     * Vraci velikost vektoru (x,y)
+     * @return Velikost vektory (x,y)
+     */
+    public double size(){
+        return Math.sqrt(x*x + y*y);
+    }
+
+    /**
+     * Vypocita vzdalenost mezi bodama
+     * @param a Bod 1
+     * @param b Bod 2
+     * @return Vzdalenost mezi danymi body
+     */
+    public static double distanceTo(Coord2D a, Coord2D b){
+        //Math.sqrt((x1 - x2)^2 + (y1 - y2)^2)
+        double x1 = a.getX();
+        double x2 = b.getX();
+        double y1 = a.getY();
+        double y2 = b.getY();
+        double dist = Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2));
+        return dist;
+    }
+
+    /**
      * Vraci x-ove souradnice
      * @return X-ove souradnice vraceny jako double
      */

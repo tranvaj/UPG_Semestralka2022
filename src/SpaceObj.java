@@ -56,6 +56,31 @@ public class SpaceObj {
         return r;
     }
 
+    /**
+     * Metoda nastavi kolizi, pokud tento objekt prekryva souradnice stredu druheho objektu a
+     * <br>pokud je tento objekt tezsi nez ten druhy.<br>
+     * <br>Pokud nastane kolize, tento objekt absorbuje druhy tak, ze si prepocita rychlost pomoci
+     * zakonu zachovani hybnosti, pricte si k sobe vahu druheho objektu a prepocita si svoji velikost.
+     * @param other Objekt se kterym nastane kolize.
+     * @return True, pokud nastala kolize, jinak False
+     */
+    public boolean collide(SpaceObj other){
+        if(Coord2D.distanceTo(this.getPos(),other.getPos()) <= this.getSize()/2){
+            double velX = (this.weight*this.vel.getX() + other.weight*other.vel.getX())/(this.weight + other.weight);
+            double velY = (this.weight*this.vel.getY() + other.weight*other.vel.getY())/(this.weight + other.weight);
+            if(this.weight < other.weight){
+                return false;
+            } else{
+                setVel(new Coord2D(velX,velY));
+                setWeight(this.weight + other.getWeight());
+                setSize(getRadius()*2);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     //GETTERY A SETTERY
 
     /**
@@ -128,6 +153,14 @@ public class SpaceObj {
      */
     public double getWeight() {
         return weight;
+    }
+
+    /**
+     * Nastavi vahu vesmirneho objektu
+     * @param weight Vaha vesmirneho objektu
+     */
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
     /**

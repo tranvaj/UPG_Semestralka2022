@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Tato trida reprezentuje vesmir, ktery obsahuje vesmirne objekty.
@@ -17,6 +16,7 @@ public class Space {
      * Cas od posledniho spusteni metody updateSystem
      */
     private double timeSinceLastUpdateAbsolute;
+
 
 
     private boolean simPaused = false;
@@ -85,7 +85,68 @@ public class Space {
         return simulationTime;
     }
 
-    private long getCurrentTime(){
+
+    private double trackTimeStart;
+    private SpaceObj trackedPlanet;
+    private Queue<Double> trackTime = new LinkedList<>();
+    private Queue<Double> trackVel = new LinkedList<>();
+
+    /**
+     * Metoda zaznamena rychlost a momentalni cas objektu
+     * @param planet Objekt, ktery ma byt zaznamenavan
+     */
+    public void trackPlanetVel(SpaceObj planet) {
+        double currTime = (getCurrentTime()/1000.0);
+        if(trackedPlanet == null || !trackedPlanet.equals(planet) ) {
+            trackedPlanet = planet;
+            trackTime = new LinkedList<>();
+            trackVel = new LinkedList<>();
+            trackTimeStart = currTime;
+        }
+
+        //spagety s parkem a kecupem
+
+        double trackTimeElapsed = currTime - trackTimeStart;
+        //System.out.println((getCurrentTime()/1000.0)+ " - " + trackTimeStart + " = " +  trackTimeElapsed);
+
+        if(trackTimeElapsed <= 0.1){
+            trackTime.add(trackTimeElapsed);
+            trackVel.add(trackedPlanet.getVel().size());
+        } else if(trackTimeElapsed < 30){
+            trackTime.add(trackTimeElapsed);
+            trackVel.add(trackedPlanet.getVel().size());
+
+        } else{
+            trackTime.add(trackTimeElapsed);
+            trackVel.add(trackedPlanet.getVel().size());
+
+            trackTime.poll();
+            trackVel.poll();
+        }
+    }
+
+    /**
+     * Vrati zaznamenane casy objektu
+     * @return Fronta
+     */
+    public Queue<Double> getTrackTime() {
+        return trackTime;
+    }
+
+    /**
+     * Vrati zaznamenane rychlosti objektu
+     * @return Rychlosti objektu
+     */
+    public Queue<Double> getTrackVel() {
+        return trackVel;
+    }
+
+
+    /**
+     * Vraci ubehnuty cas v milisekundach, ktery neni ovlivnen krokem v casu
+     * @return Ubehnuty cas v milisekundach, ktery neni ovlivnen krokem v casu
+     */
+    public long getCurrentTime(){
         if(simPaused) {
             //jelikoz getSimulationTime vyvolava tento cas
             //updatneme ubehnutou dobu od zacatku pauzy
@@ -128,6 +189,27 @@ public class Space {
     public boolean isSimPaused() {
         return simPaused;
     }
+
+    /**
+     * Metoda kontroluje jestli nenastala kolize objektu,
+     * pokud ano, vesmirne objekty se spoji.
+     */
+    public void checkCollision(){
+        for(SpaceObj i : spaceObjs){
+            for(SpaceObj j : spaceObjs){
+                if(i.equals(j)){
+                    continue;
+                }
+                if(i.collide(j)){
+                    //System.out.println("collision");
+                    spaceObjs.remove(j);
+                    return;
+                }
+            }
+        }
+    }
+
+
 
     /**
      * Vypocita a ulozi nove pozice a rychlosti vsech vesmirnych objektu v simulacnim case

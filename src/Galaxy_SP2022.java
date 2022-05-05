@@ -1,7 +1,17 @@
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.DefaultXYDataset;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
+
 
 import javax.swing.*;
 /**
@@ -38,6 +48,16 @@ public class Galaxy_SP2022 {
 		window.setMinimumSize(new Dimension(800,600));
 		window.setSize(800, 600);
 
+		//graph
+		JFrame graph = new JFrame();
+		graph.setTitle("A21B0299P, Vaclav Tran");
+		graph.setMinimumSize(new Dimension(800,600));
+		graph.setSize(800, 600);
+		graph.setLocationRelativeTo(window);
+		graph.setLocation(graph.getX()+window.getWidth(), graph.getY());
+
+
+
 
 		long startTime = System.currentTimeMillis();
 		space.setSimStartTime(startTime);
@@ -55,7 +75,12 @@ public class Galaxy_SP2022 {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				//posilame relativni souradnice (vuci platnu) mysi pri stisknuti jako parametry metody getSelected
-				panel.getSelected(new Coord2D(e.getX(),e.getY()));
+				if(panel.getSelected(new Coord2D(e.getX(),e.getY())) != null){
+					if(!graph.isVisible()){
+						graph.setVisible(true);
+					}
+				}
+
 			}
 
 			@Override
@@ -97,16 +122,85 @@ public class Galaxy_SP2022 {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if(!space.isSimPaused()) space.updateSystem(); //pokud neni simulace pozastavena, updatne se nas system/vesmir
+
+				if(!space.isSimPaused()) { //pokud neni simulace pozastavena, updatne se nas system/vesmir
+					space.updateSystem();
+					space.checkCollision();
+					//kod zajistujici aktualizaci grafu rychlosti vybraneho objektu
+					if(panel.getSelectedObj() != null){
+						space.trackPlanetVel(panel.getSelectedObj());
+						if(chart != null) {
+							xyDataset = getDataset(processData(space.getTrackTime()),processData(space.getTrackVel()));
+							chart.setChart(ChartFactory.createXYLineChart(
+									"Rychlost vesmirneho objektu " + panel.getSelectedObj().getName() + " za poslednich 30 sekund",
+									"Cas [s]",
+									"Rychlost [m/s]",
+									xyDataset));
+						}
+					}
+				}
 				panel.repaint();
+
 			}
-		},0,15);
+		},0,20);
 
 		window.pack(); //udela resize okna dle komponent
-
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setLocationRelativeTo(null); //vycentrovat na obrazovce
 		window.setVisible(true);
+
+		graph.pack();
+		graph.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		//graph.setLocationRelativeTo(null);
+		chart = new ChartPanel(createXYGraph(processData(space.getTrackTime()),processData(space.getTrackVel())));
+		graph.add(chart);
+	}
+
+	/**
+	 * Zobrazitelny graf
+	 */
+	private static ChartPanel chart;
+	/**
+	 * X,Y data
+	 */
+	private static XYDataset xyDataset;
+
+	/**
+	 * Prevede frontu na list, poradi prvku se uchovava.
+	 * @param data Fronta
+	 * @return List
+	 */
+	private static List<Double> processData(Queue<Double> data){
+		return data.stream().toList();
+	}
+
+	/**
+	 * Vraci XY data pro JFreeChart graf. Predpoklada se, ze oba listy maji stejnou velikost.
+	 * @param x List s x-ovyma prvkama
+	 * @param y List s y-ovyma prvkama
+	 * @return XY dataset
+	 */
+	private static XYDataset getDataset(List<Double> x, List<Double> y){
+		xyDataset = new DefaultXYDataset();
+		XYSeries rychlost = new XYSeries("Rychlost");
+		for(int i = 0; i < x.size(); i++){
+			rychlost.add(x.get(i),y.get(i));
+		}
+
+		XYSeriesCollection dataset = new XYSeriesCollection( );
+		dataset.addSeries(rychlost);
+		return dataset;
+	}
+
+	/**
+	 * Vytvori a vrati XY graf
+	 * @param x List s x-ovyma prvkama
+	 * @param y List s y-ovyma prvkama
+	 * @return Zobrazitelny XY graf
+	 */
+	private static JFreeChart createXYGraph(List<Double> x, List<Double> y){
+		JFreeChart chart = ChartFactory.createXYLineChart("Rychlost","Cas","Rychlost", getDataset(x,y));
+		return chart;
 	}
 
 
