@@ -208,6 +208,9 @@ public class DrawingPanel extends JPanel {
         List<List<Coord2D>> temp = trails.stream().toList();
         List<Path2D> paths = new LinkedList<>();
 
+        //omlouvam se za spagety
+
+
         //z ulozenych pozic ziskame jednotlive cesty vsech objektu
         for(int k = 0; k < temp.get(temp.size()-1).size(); k++){
             paths.add(new Path2D.Double());

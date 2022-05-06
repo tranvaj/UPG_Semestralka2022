@@ -106,7 +106,6 @@ public class Space {
             trackTimeStart = currTime;
         }
 
-        //spagety s parkem a kecupem
 
         double trackTimeElapsed = currTime - trackTimeStart;
         //System.out.println((getCurrentTime()/1000.0)+ " - " + trackTimeStart + " = " +  trackTimeElapsed);
@@ -206,6 +205,7 @@ public class Space {
                     if(j.getName().equals("Planet55")){
                         System.out.println();
                     }
+                    //prvek se jakoby "smaze", predtim jsem pouzival remove, ale hodne to blblo
                     spaceObjs.set(spaceObjs.indexOf(j),null);
                 }
             }
