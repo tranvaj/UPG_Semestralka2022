@@ -36,6 +36,8 @@ public class Space {
         this.stepTime = t;
         this.timeSinceLastUpdateAbsolute = 0;
         this.simStartTime = 0;
+        this.trackTime = new LinkedList<>();
+        this.trackVel = new LinkedList<>();
     }
 
     /**
@@ -88,8 +90,8 @@ public class Space {
 
     private double trackTimeStart;
     private SpaceObj trackedPlanet;
-    private Queue<Double> trackTime = new LinkedList<>();
-    private Queue<Double> trackVel = new LinkedList<>();
+    private Queue<Double> trackTime;
+    private Queue<Double> trackVel;
 
     /**
      * Metoda zaznamena rychlost a momentalni cas objektu
@@ -239,7 +241,7 @@ public class Space {
 
             //Vypocitani a ulozeni novych pozic a rychlosti vesmirnych objektu
             for(int i = 0; i < spaceObjs.size(); i++){
-                SpaceObj spaceObj = getSpaceObjs().get(i);
+                SpaceObj spaceObj = spaceObjs.get(i);
                 double speedX = spaceObj.getVel().getX() + 0.5 * dt * accelerationList.get(i).getX();
                 double speedY = spaceObj.getVel().getY() + 0.5 * dt * accelerationList.get(i).getY();
                 double posX = spaceObj.getPos().getX() + dt * speedX;
