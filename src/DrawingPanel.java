@@ -50,7 +50,7 @@ public class DrawingPanel extends JPanel {
     /**
      * Reference na momentalne vybrany vesmirny objekt
      */
-    SpaceObj selectedObj;
+    private SpaceObj selectedObj;
 
     /**
      * Scale hodnota
@@ -70,9 +70,9 @@ public class DrawingPanel extends JPanel {
      */
     private double trailTimeStart;
     /**
-     * Pozice vsech objektu za posledni 1 sekundu realneho casu
+     * Seznam obsahujici pozici vsech objektu za posledni 1 sekundu realneho casu
      */
-    private Queue<List<Coord2D>> trails;
+    private List<List<Coord2D>> trails;
 
     /**
      * Konstruktor teto tridy
@@ -186,41 +186,45 @@ public class DrawingPanel extends JPanel {
         double currentTime = (space.getCurrentTime()/1000.0) - trailTimeStart;
 
         if(!space.isSimPaused()){
-            trails.add(space.getSpaceObjs().stream().map(SpaceObj::getPos).toList());
+            List<Coord2D> positions = new LinkedList<>();
+            space.getSpaceObjs().forEach(spaceObj -> {
+                if(spaceObj != null){
+                    positions.add(spaceObj.getPos());
+                } else{
+                    positions.add(null);
+                }
+            });
+            trails.add(positions);
             if (currentTime > 1) {
-                trails.poll();
+                //pokud je cas nad 1, zbavime se nejstarsich pozic
+                trails.remove(trails.stream().findFirst().get());
             }
         }
 
         g2.setColor(Color.LIGHT_GRAY);
         //velikosti objektu
         List<Double> sizes = spaceObjShapeList.stream().map(shape -> shape.getBounds2D().getWidth()).toList();
-        //queue na arraylist
+
         List<List<Coord2D>> temp = trails.stream().toList();
         List<Path2D> paths = new LinkedList<>();
 
-
         //z ulozenych pozic ziskame jednotlive cesty vsech objektu
-        for(int k = 0; k < temp.get(0).size(); k++){
+        for(int k = 0; k < temp.get(temp.size()-1).size(); k++){
             paths.add(new Path2D.Double());
         }
         for(int i = 0; i < temp.size(); i++){
             for(int j = 0; j < temp.get(i).size(); j++){
+                if(temp.get(i).get(j) == null){
+                    continue;
+                }
                 Path2D path = paths.get(j);
                 Coord2D pos = temp.get(i).get(j);
-                if(i == 0) {
+                if(path.getCurrentPoint() == null) {
                     path.moveTo(-minObj.getX()+ pos.getX(),  -minObj.getY()+ pos.getY());
                 } else{
                     path.lineTo(-minObj.getX() + pos.getX(), -minObj.getY()+ pos.getY());
                 }
             }
-        }
-
-        //pokud nastane kolize, resetujeme frontu
-        if(paths.size() != sizes.size()){
-            trailTimeStart = space.getCurrentTime()/1000.0;
-            trails = new LinkedList<>();
-            return;
         }
 
         for(int i = 0; i < sizes.size(); i++){
@@ -261,10 +265,9 @@ public class DrawingPanel extends JPanel {
      */
     public void getMinMaxBounds(java.util.List<SpaceObj> spaceObjs){
         double minX,minY,maxX,maxY;
-        double x_def = spaceObjs.get(0).getPos().getX();
-        double y_def = spaceObjs.get(0).getPos().getY();
-        minX = x_def; minY = y_def; maxX =  x_def; maxY = y_def;
+        minX = Double.MAX_VALUE; minY = Double.MAX_VALUE; maxX =  Double.MIN_VALUE; maxY = Double.MIN_VALUE;
         for(SpaceObj a : spaceObjs){
+            if(a == null) continue;
             //vypocitani rohu naseho ohranicujiciho obdelnika
             //velikosti jsou brany v potaz pri pocitani
             double size = a.getSize() * extraObjScale;
@@ -293,6 +296,11 @@ public class DrawingPanel extends JPanel {
         spaceObjShapeList = new LinkedList<>();
         try{
         for (SpaceObj spaceObj : space.getSpaceObjs()) {
+            if(spaceObj == null) {
+                //toto bude predstavovat nulovy prvek
+                spaceObjShapeList.add(new Ellipse2D.Double(0,0,0,0));
+                continue;
+            }
             if (spaceObj.getType().equals("Planet") || spaceObj.getType().equals("Comet")) {
                 Double xPos = spaceObj.getPos().getX();
                 Double yPos = spaceObj.getPos().getY();
@@ -329,7 +337,7 @@ public class DrawingPanel extends JPanel {
         }
         } catch (Exception e){
             //nekdy nastane concurrentmodexception, nekdy ne, nevim jak to osetrit, problem s kolizi apod.
-            //System.out.println("Error, skipping drawing frame: " + e.getMessage());
+            System.out.println("Error, skipping drawing frame: " + e.getMessage());
             //nastesti lidske oko preskoceny vykres nezaznamena
         }
     }

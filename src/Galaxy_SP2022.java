@@ -142,7 +142,7 @@ public class Galaxy_SP2022 {
 				panel.repaint();
 
 			}
-		},0,20);
+		},0,10);
 
 		window.pack(); //udela resize okna dle komponent
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

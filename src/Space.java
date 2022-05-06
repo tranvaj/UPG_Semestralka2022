@@ -197,31 +197,26 @@ public class Space {
      * pokud ano, vesmirne objekty se spoji.
      */
     public void checkCollision(){
-        List<SpaceObj> toRemove = new ArrayList<>();
         for(SpaceObj i : spaceObjs){
             for(SpaceObj j : spaceObjs){
-                if(i.equals(j)){
+                if(i == null || j == null || i.equals(j)){
                     continue;
                 }
                 if(i.collide(j)){
-                    //System.out.println("collision");
-                    toRemove.add(j);
+                    if(j.getName().equals("Planet55")){
+                        System.out.println();
+                    }
+                    spaceObjs.set(spaceObjs.indexOf(j),null);
                 }
             }
         }
-        spaceObjs.removeAll(toRemove);
     }
-
 
 
     /**
      * Vypocita a ulozi nove pozice a rychlosti vsech vesmirnych objektu v simulacnim case
      */
     public void updateSystem(){
-        //Simulace nefunguje spravne, pokud jsou vesmirne objekty moc blizko sebe
-        //Implementace kolize je potrebna na vyreseni tohoto problemu
-        //Kolize bude implementovana ve druhe casti semestralni prace
-        //TODO: KOLIZE MEZI VESMIRNYMA OBJEKTAMA
 
         //Ubehnuta doba od posledniho spusteni teto metody se ulozi do promenne t
         double t = relativeTimeSinceLastUpdate();
@@ -242,6 +237,8 @@ public class Space {
             //Vypocitani a ulozeni novych pozic a rychlosti vesmirnych objektu
             for(int i = 0; i < spaceObjs.size(); i++){
                 SpaceObj spaceObj = spaceObjs.get(i);
+                if(spaceObj == null) continue;
+                if(accelerationList.get(i) == null) continue;
                 double speedX = spaceObj.getVel().getX() + 0.5 * dt * accelerationList.get(i).getX();
                 double speedY = spaceObj.getVel().getY() + 0.5 * dt * accelerationList.get(i).getY();
                 double posX = spaceObj.getPos().getX() + dt * speedX;
@@ -265,11 +262,14 @@ public class Space {
      */
     private Coord2D getAcceleration(int index){
         SpaceObj obj_i = spaceObjs.get(index);
+        if(obj_i == null) return null;
         double a_i_x = 0;
         double a_i_y = 0;
         for(int j = 0; j < spaceObjs.size(); j++){
             if(j == index) continue;
             SpaceObj obj_j = spaceObjs.get(j);
+            if(obj_j == null) continue;
+
             double dx =  obj_j.getPos().getX() - obj_i.getPos().getX();
             double dy =  obj_j.getPos().getY() - obj_i.getPos().getY();
             double dist = Math.sqrt(dx*dx + dy*dy);
