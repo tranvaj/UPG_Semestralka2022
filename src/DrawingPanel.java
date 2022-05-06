@@ -329,7 +329,8 @@ public class DrawingPanel extends JPanel {
         }
         } catch (Exception e){
             //nekdy nastane concurrentmodexception, nekdy ne, nevim jak to osetrit, problem s kolizi apod.
-            System.out.println("Error, skipping drawing frame: " + e.getMessage());
+            //System.out.println("Error, skipping drawing frame: " + e.getMessage());
+            //nastesti lidske oko preskoceny vykres nezaznamena
         }
     }
 
