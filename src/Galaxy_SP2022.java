@@ -125,7 +125,7 @@ public class Galaxy_SP2022 {
 
 				if(!space.isSimPaused()) { //pokud neni simulace pozastavena, updatne se nas system/vesmir
 					space.checkCollision();
-					space.updateSystem();
+                    space.updateSystem();
 					//kod zajistujici aktualizaci grafu rychlosti vybraneho objektu
 					if(panel.getSelectedObj() != null){
 						space.trackPlanetVel(panel.getSelectedObj());
@@ -156,6 +156,8 @@ public class Galaxy_SP2022 {
 		graph.add(chart);
 	}
 
+	//atributy jsou tady abych nemusel scrollovat porad nahoru : D, ale meli by byt nahore
+
 	/**
 	 * Zobrazitelny graf
 	 */
@@ -182,7 +184,7 @@ public class Galaxy_SP2022 {
 	 */
 	private static XYDataset getDataset(List<Double> x, List<Double> y){
 		xyDataset = new DefaultXYDataset();
-		XYSeries rychlost = new XYSeries("Rychlost");
+		XYSeries rychlost = new XYSeries("Rychlost vesmirneho objektu");
 		for(int i = 0; i < x.size(); i++){
 			rychlost.add(x.get(i),y.get(i));
 		}

@@ -195,6 +195,7 @@ public class Space {
      * pokud ano, vesmirne objekty se spoji.
      */
     public void checkCollision(){
+        List<SpaceObj> toRemove = new ArrayList<>();
         for(SpaceObj i : spaceObjs){
             for(SpaceObj j : spaceObjs){
                 if(i.equals(j)){
@@ -202,11 +203,11 @@ public class Space {
                 }
                 if(i.collide(j)){
                     //System.out.println("collision");
-                    spaceObjs.remove(j);
-                    return;
+                    toRemove.add(j);
                 }
             }
         }
+        spaceObjs.removeAll(toRemove);
     }
 
 
