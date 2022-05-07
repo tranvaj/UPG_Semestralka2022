@@ -133,8 +133,8 @@ public class Galaxy_SP2022 {
 							xyDataset = getDataset(processData(space.getTrackTime()),processData(space.getTrackVel()));
 							chart.setChart(ChartFactory.createXYLineChart(
 									"Rychlost vesmirneho objektu " + panel.getSelectedObj().getName() + " za poslednich 30 sekund",
-									"Cas [s]",
-									"Rychlost [m/s]",
+									"t [s]",
+									"v [km/h]",
 									xyDataset));
 						}
 					}
@@ -186,7 +186,8 @@ public class Galaxy_SP2022 {
 		xyDataset = new DefaultXYDataset();
 		XYSeries rychlost = new XYSeries("Rychlost vesmirneho objektu");
 		for(int i = 0; i < x.size(); i++){
-			rychlost.add(x.get(i),y.get(i));
+			//3.6 krat pro km/h
+			rychlost.add((double)x.get(i),(double)(3.6*y.get(i)));
 		}
 
 		XYSeriesCollection dataset = new XYSeriesCollection( );

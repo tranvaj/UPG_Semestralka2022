@@ -135,7 +135,7 @@ public class Space {
     }
 
     /**
-     * Vrati zaznamenane rychlosti objektu
+     * Vrati zaznamenane rychlosti objektu v m/s
      * @return Rychlosti objektu
      */
     public Queue<Double> getTrackVel() {
