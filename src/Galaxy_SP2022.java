@@ -126,17 +126,21 @@ public class Galaxy_SP2022 {
 				if(!space.isSimPaused()) { //pokud neni simulace pozastavena, updatne se nas system/vesmir
 					space.checkCollision();
                     space.updateSystem();
-					//kod zajistujici aktualizaci grafu rychlosti vybraneho objektu
-					if(panel.getSelectedObj() != null){
-						space.trackPlanetVel(panel.getSelectedObj());
-						if(chart != null) {
-							xyDataset = getDataset(processData(space.getTrackTime()),processData(space.getTrackVel()));
-							chart.setChart(ChartFactory.createXYLineChart(
-									"Rychlost vesmirneho objektu " + panel.getSelectedObj().getName() + " za poslednich 30 sekund",
-									"t [s]",
-									"v [km/h]",
-									xyDataset));
-						}
+				}
+
+				//kod zajistujici zobrazeni grafu rychlosti vybraneho objektu
+				space.trackPlanetVelAll();
+				if(panel.getSelectedObj() != null){
+					String objName = panel.getSelectedObj().getName();
+					Link<Double,Double,SpaceObj> link = space.getVelTimeLink(panel.getSelectedObj());
+					if(chart != null && link != null) {
+						//System.out.println(link.getLink().toString());
+						xyDataset = getDataset(link.getItemX(),link.getItemY());
+						chart.setChart(ChartFactory.createXYLineChart(
+								"Rychlost vesmirneho objektu " + objName + " za poslednich 30 sekund",
+								"t [s]",
+								"v [km/h]",
+								xyDataset));
 					}
 				}
 				panel.repaint();
@@ -152,7 +156,7 @@ public class Galaxy_SP2022 {
 		graph.pack();
 		graph.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		//graph.setLocationRelativeTo(null);
-		chart = new ChartPanel(createXYGraph(processData(space.getTrackTime()),processData(space.getTrackVel())));
+		chart = new ChartPanel(createXYGraph(null,null));
 		graph.add(chart);
 	}
 
@@ -167,14 +171,6 @@ public class Galaxy_SP2022 {
 	 */
 	private static XYDataset xyDataset;
 
-	/**
-	 * Prevede frontu na list, poradi prvku se uchovava.
-	 * @param data Fronta
-	 * @return List
-	 */
-	private static List<Double> processData(Queue<Double> data){
-		return data.stream().toList();
-	}
 
 	/**
 	 * Vraci XY data pro JFreeChart graf. Predpoklada se, ze oba listy maji stejnou velikost.
@@ -185,11 +181,12 @@ public class Galaxy_SP2022 {
 	private static XYDataset getDataset(List<Double> x, List<Double> y){
 		xyDataset = new DefaultXYDataset();
 		XYSeries rychlost = new XYSeries("Rychlost vesmirneho objektu");
-		for(int i = 0; i < x.size(); i++){
-			//3.6 krat pro km/h
-			rychlost.add((double)x.get(i),(double)(3.6*y.get(i)));
+		if(x != null && y != null){
+			for(int i = 0; i < x.size(); i++){
+				//3.6 krat pro km/h
+				rychlost.add((double)x.get(i),(double)(3.6*y.get(i)));
+			}
 		}
-
 		XYSeriesCollection dataset = new XYSeriesCollection( );
 		dataset.addSeries(rychlost);
 		return dataset;

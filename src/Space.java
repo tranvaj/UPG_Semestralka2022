@@ -36,8 +36,9 @@ public class Space {
         this.stepTime = t;
         this.timeSinceLastUpdateAbsolute = 0;
         this.simStartTime = 0;
-        this.trackTime = new LinkedList<>();
-        this.trackVel = new LinkedList<>();
+
+        this.timeVelLinkList = new LinkedList<>();
+        this.trackTimeStart = Double.NaN;
     }
 
     /**
@@ -88,60 +89,92 @@ public class Space {
     }
 
 
-    private double trackTimeStart;
-    private SpaceObj trackedPlanet;
-    private Queue<Double> trackTime;
-    private Queue<Double> trackVel;
+    private Double trackTimeStart;
+    private List<Link<Double,Double,SpaceObj>> timeVelLinkList;
 
     /**
      * Metoda zaznamena rychlost a momentalni cas objektu
      * @param planet Objekt, ktery ma byt zaznamenavan
      */
-    public void trackPlanetVel(SpaceObj planet) {
-        double currTime = (getCurrentTime()/1000.0);
-        if(trackedPlanet == null || !trackedPlanet.equals(planet) ) {
-            trackedPlanet = planet;
-            trackTime = new LinkedList<>();
-            trackVel = new LinkedList<>();
+    private void trackPlanetVel(SpaceObj planet) {
+        if(planet == null) return;
+
+        double currTime = ((System.currentTimeMillis() - simStartTime)/1000.0);
+        Link<Double,Double,SpaceObj> correctLink = null;
+
+        if(Double.isNaN(trackTimeStart)){
             trackTimeStart = currTime;
         }
 
-
         double trackTimeElapsed = currTime - trackTimeStart;
+
+        for(int i = 0; i < timeVelLinkList.size(); i++){
+            if(timeVelLinkList.get(i) != null){
+                if(timeVelLinkList.get(i).getLink() == null){
+                    continue;
+                }
+                if(timeVelLinkList.get(i).getLink().equals(planet)){
+                    correctLink = timeVelLinkList.get(i);
+                    break;
+                }
+            }
+            if(i == timeVelLinkList.size() - 1){
+                correctLink = new Link<>(planet);
+                timeVelLinkList.add(correctLink);
+            }
+        }
+
+        if(timeVelLinkList.size() == 0){
+            correctLink = new Link<>(planet);
+            timeVelLinkList.add(correctLink);
+        }
+
+        if(correctLink == null) return;
+
         //System.out.println((getCurrentTime()/1000.0)+ " - " + trackTimeStart + " = " +  trackTimeElapsed);
+        correctLink.addToItemX(trackTimeElapsed);
+        correctLink.addToItemY(correctLink.getLink().getVel().size());
 
-        if(trackTimeElapsed <= 0.1){
-            trackTime.add(trackTimeElapsed);
-            trackVel.add(trackedPlanet.getVel().size());
-        } else if(trackTimeElapsed < 30){
-            trackTime.add(trackTimeElapsed);
-            trackVel.add(trackedPlanet.getVel().size());
-
-        } else{
-            trackTime.add(trackTimeElapsed);
-            trackVel.add(trackedPlanet.getVel().size());
-
-            trackTime.poll();
-            trackVel.poll();
+        if(trackTimeElapsed > 30){
+            double lastTime = correctLink.getItemX().get(correctLink.getItemX().size()-1);
+            double firstTime = correctLink.getItemX().get(0);
+            while(lastTime-firstTime > 30){
+                if(correctLink.getItemX().size() <= 2 || correctLink.getItemY().size() <= 2){
+                    //kontrola pro jistotu
+                    break;
+                }
+                correctLink.removeFirstFromItemX();
+                correctLink.removeFirstFromItemY();
+                lastTime = correctLink.getItemX().get(correctLink.getItemX().size()-1);
+                firstTime = correctLink.getItemX().get(0);
+            }
         }
     }
 
     /**
-     * Vrati zaznamenane casy objektu
-     * @return Fronta
+     * Zaznamena vsechny rychlosti a casy vsech vesmirnych objektu
      */
-    public Queue<Double> getTrackTime() {
-        return trackTime;
+    public void trackPlanetVelAll(){
+        for(SpaceObj s : spaceObjs){
+            trackPlanetVel(s);
+        }
+        //System.out.println(timeVelLinkList.size());
     }
 
     /**
-     * Vrati zaznamenane rychlosti objektu v m/s
-     * @return Rychlosti objektu
+     * Metoda se snazi najit strukturu s rychlosti a casem, ktery patri danemu objektu z parametru
+     * @param planet Objekt, kteremu patri tato struktura
+     * @return Strukturu, ktera v sobe uchovava cas, rychlost v case a vesmirny objekt kteremu toto patri.
      */
-    public Queue<Double> getTrackVel() {
-        return trackVel;
+    public Link<Double,Double,SpaceObj> getVelTimeLink(SpaceObj planet){
+        for(Link<Double,Double,SpaceObj> x : timeVelLinkList){
+            if(x.getLink().equals(planet)){
+                //System.out.println("yay");
+                return x;
+            }
+        }
+        return null;
     }
-
 
     /**
      * Vraci ubehnuty cas v milisekundach, ktery neni ovlivnen krokem v casu
