@@ -98,7 +98,6 @@ public class Space {
      */
     private void trackPlanetVel(SpaceObj planet) {
         if(planet == null) return;
-
         double currTime = ((System.currentTimeMillis() - simStartTime)/1000.0);
         Link<Double,Double,SpaceObj> correctLink = null;
 
@@ -149,15 +148,29 @@ public class Space {
                 firstTime = correctLink.getItemX().get(0);
             }
         }
+
     }
+
+    private double trackTimeStep = 0.05;
+    private double trackTimeLastUpdate;
 
     /**
      * Zaznamena vsechny rychlosti a casy vsech vesmirnych objektu
      */
     public void trackPlanetVelAll(){
+        double currTime = ((System.currentTimeMillis() - simStartTime)/1000.0);
+
+        double trackTimeElapsed = currTime - trackTimeStart;
+
+        if(trackTimeElapsed-trackTimeLastUpdate < trackTimeStep){
+            return;
+        }
+
         for(SpaceObj s : spaceObjs){
             trackPlanetVel(s);
         }
+
+        trackTimeLastUpdate = trackTimeElapsed;
         //System.out.println(timeVelLinkList.size());
     }
 
